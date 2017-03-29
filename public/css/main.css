@@ -1,0 +1,27 @@
+html{
+  background-color: #e5e5e5;
+}
+div{
+  box-sizing: border-box;
+}
+#files{
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 5px;
+  height: 400px;
+  width: 500px;
+}
+.file{
+  background-color: #fafafa;
+  padding: 10px;
+  border: 2px #f2f2f2 solid;
+  border-radius: 5px;
+  margin: 5px;
+  width: 100px;
+  cursor: pointer;
+}
+#file-editor {
+  margin: 10px 0 10px 0;
+  width: 500px;
+  resize: none;
+}

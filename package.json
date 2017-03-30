@@ -1,8 +1,7 @@
 {
   "name": "sssf-project",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Collaborative text editing application",
-  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,11 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/Juicedi/SSSF-Project.git"
   },
-  "keywords": [
-    "sssf"
-  ],
-  "author": "Jussi Latvaniemi",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Juicedi/SSSF-Project/issues"
   },

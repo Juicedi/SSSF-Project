@@ -12,14 +12,26 @@
 </head>
 
 <body>
+  <div id="add-project">
+    <form id="add-project-form" action="/addProject" method="post">
+      <input id="add-title" type="text" name="title">
+      <textarea name="content" id="add-content" cols="30" rows="10"></textarea>
+      <input type="submit">
+    </form>
+  </div>
   <div id="files">
     <div class="file">project 1</div>
   </div>
   <div id="editor">
+    <input type="text" id="file-title">
     <textarea name="editor" id="file-editor" cols="30" rows="10"></textarea>
+    <button id="update">Save</button>
   </div>
 </body>
 
+<script src="js/Controller.js"></script>
+<script src="js/Model.js"></script>
+<script src="js/View.js"></script>
 <script src="js/app.js"></script>
 
 </script>

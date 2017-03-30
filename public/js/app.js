@@ -1,23 +1,5 @@
-const file = document.querySelector('.file');
+const controller = new Controller();
+const model = new Model();
+const view = new View();
 
-const getFileData = () => {
-  const mRequest = new Request('/project');
-  fetch(mRequest).then((response) => {
-    if (!response.ok) {
-      console.log('Error! Status Code: ' +
-        response.status);
-      return;
-    }
-
-    // Do something with the response
-    response.json().then((data) => {
-      document.getElementById('file-editor').value = data.content;
-    });
-  }).catch(function (err) {
-    console.log('Fetch Error :-S', err);
-  });
-}
-
-file.addEventListener('click', () => {
-  getFileData();
-}, this);
+controller.run();

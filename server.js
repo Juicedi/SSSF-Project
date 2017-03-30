@@ -49,13 +49,59 @@ const app = express();
 //   res.sendStatus(200);
 // });
 
+/*------------------ Temp DB :) ----------------------*/
+let database = [
+  {
+    title: 'firstproject',
+    content: 'wasdwasdwasd qwerqwerqwre project!'
+  },
+  {
+    title: 'proper project',
+    content: 'Kissa (ransk. chat) on eräänlainen tappavaa eläintä muistuttava hirvittävä peto, joka on ulkonäöltään karvainen olento (Myös karvattomia löytyy). Se kiljaisee hännän päälle astuttaessa ja saattaa pahimmillaan syödä koskemattomuuttaan loukanneen henkilön. Kissalla on tunnusomaiset korvat, silmät, etujalat ja valkotäpläinen ruotomainen häntä, jonka avulla se kykenee muun muassa tasapainoilemaan piha-aidan harjalla ja koivunoksalla. Kun kissa tapaa vihollisen, jonka se arvioi olevan sitä itseään voimakkaampi, se tipauttaa kaikki karvansa ja pakenee karvanlähdön suoman paniikinomaisen hämmästyksen turvin.'
+  }
+]
+const getTitles = () => {
+  let array = [];
+  for (project of database) {
+    array.push(project.title);
+  }
+  return array;
+}
+/*------------------ Temp DB :) ----------------------*/
+
 // Gets
 app.get('/', (req, res) => {
   res.redirect('/index.html');
 });
 
-app.get('/project', (req, res) => {
-  res.send('{"title": "New project", "content": "Non voluptate proident esse sit anim Lorem duis dolor nostrud aliquip mollit sit."}');
+app.post('/project', bParser.urlencoded({extended: true}), (req, res) => {
+  const data = req.body;
+  res.send(JSON.stringify(database[data.id]));
+});
+
+app.post('/updateProject', bParser.urlencoded({extended: true}), (req, res) => {
+  const data = req.body;
+  console.log(data);
+  database[data.id].title = data.title;
+  database[data.id].content = data.content;
+  res.sendStatus(200);
+});
+
+app.post('/addProject', bParser.urlencoded({extended: true}), (req, res) => {
+  const data = req.body;
+  console.log(data);
+  const obj = {
+    title: '',
+    content: ''
+  }
+  database.push(obj);
+  database[database.length-1].title = data.title;
+  database[database.length-1].content = data.content;
+  res.sendStatus(200);
+});
+
+app.get('/projects', (req, res) => {
+  res.send(getTitles());
 });
 
 app.use(express.static('public'));

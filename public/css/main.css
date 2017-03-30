@@ -4,24 +4,36 @@ html{
 div{
   box-sizing: border-box;
 }
+#add-project, #files, #editor {
+  display: inline-block;
+  vertical-align: top;
+}
+#add-project textarea, #add-project input {
+  display: block;
+}
 #files{
   border-radius: 5px;
   background-color: #fff;
   padding: 5px;
-  height: 400px;
+  height: 200px;
   width: 500px;
 }
 .file{
+  display: inline-block;
   background-color: #fafafa;
   padding: 10px;
   border: 2px #f2f2f2 solid;
   border-radius: 5px;
   margin: 5px;
-  width: 100px;
   cursor: pointer;
 }
 #file-editor {
+  display: block;
   margin: 10px 0 10px 0;
   width: 500px;
   resize: none;
+}
+#file-title {
+  display: block;
+  margin: 10px 0 0 0;
 }

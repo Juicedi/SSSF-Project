@@ -81,7 +81,7 @@ app.post('/project', bParser.urlencoded({extended: true}), (req, res) => {
 
 app.post('/updateProject', bParser.urlencoded({extended: true}), (req, res) => {
   const data = req.body;
-  console.log(data);
+  console.log(`Updated ${data.title}`);
   database[data.id].title = data.title;
   database[data.id].content = data.content;
   res.sendStatus(200);
@@ -89,7 +89,7 @@ app.post('/updateProject', bParser.urlencoded({extended: true}), (req, res) => {
 
 app.post('/addProject', bParser.urlencoded({extended: true}), (req, res) => {
   const data = req.body;
-  console.log(data);
+  console.log(`Added project ${data.title}`);
   const obj = {
     title: '',
     content: ''

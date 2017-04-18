@@ -1,5 +1,7 @@
 class Model {
-  constructor() { }
+  constructor() {
+    this.user = 'test';
+  }
 
   getProjectTitles() {
     const mRequest = new Request('/projects');

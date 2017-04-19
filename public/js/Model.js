@@ -100,4 +100,16 @@ class Model {
       console.log('Fetch Error :-S', err);
     });
   }
+
+  /**
+   * Sets current user from url parameters.
+   */
+  setCurrentUser() {
+    const url = location.href;
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    const regexS = "[\\?&]" + name + "=([^&#]*)";
+    const regex = new RegExp(regexS);
+    const results = regex.exec(url);
+    this.user = results == null ? null : results[1];
+  }
 }

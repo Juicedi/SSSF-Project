@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 const bParser = require('body-parser');
+const session = require('express-session');
+const http = require('http');
+const https = require('https');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const passwordHash = require('password-hash');
 const express = require('express');
 require('dotenv').config();
 const app = express();
@@ -76,6 +82,12 @@ app.post('/addProject', bParser.urlencoded({ extended: true }), (req, res) => {
 
 app.get('/projects', (req, res) => {
   res.send(getTitles());
+});
+app.post('/authorize', (req, res) => {
+  res.redirect('/index.html?u=' + 'test');
+});
+app.post('/register', (req, res) => {
+  res.redirect('/index.html?u=' + 'test');
 });
 
 app.use(express.static('public'));

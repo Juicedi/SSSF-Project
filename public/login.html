@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cloud Memo | Login</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div id="welcome-block">
+      <h1>Welcome</h1>
+      <h2>Please register/sign in to start using the Cloud Memo.</h2>
+      <button id="select-login" class="login-button">Login</button>
+      <button id="select-register" class="login-button">Register</button>
+    </div>
+    <div class="form-block">
+      <h1>Login</h1>
+      <form action="/authorize" method="POST" id="login-form">
+        <input id="login-username" type="text" name="username">
+        <input id="login-password" type="password" name="password">
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <div class="form-block">
+      <h1>Register</h1>
+      <form action="/register" method="POST" id="register-form">
+        <input id="register-username" type="text" name="username">
+        <input id="register-password" type="password" name="password">
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+  </body>
+</html>

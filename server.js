@@ -83,12 +83,15 @@ app.post('/addProject', bParser.urlencoded({ extended: true }), (req, res) => {
 app.get('/projects', (req, res) => {
   res.send(getTitles());
 });
-app.post('/authorize', (req, res) => {
-  res.redirect('/index.html?u=' + 'test');
+app.post('/authorize', bParser.urlencoded({ extended: true }), (req, res) => {
+  res.redirect('/index.html?u=' + req.body.username);
 });
-app.post('/register', (req, res) => {
-  res.redirect('/index.html?u=' + 'test');
+app.post('/register', bParser.urlencoded({ extended: true }), (req, res) => {
+  res.redirect('/index.html?u=' + req.body.username);
+});
+app.get('/login', (req, res) => {
+  res.redirect('login.html');
 });
 
 app.use(express.static('public'));
-app.listen(process.env.AP_PORT);
+app.listen(3000);

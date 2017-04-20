@@ -22,21 +22,28 @@
     <![endif]-->
   <div id="welcome-block" class="login-row">
     <h1>Welcome</h1>
-    <h2>Please register/sign in to start using the Cloud Memo.</h2>
+    <div class="login-row">
+      <h4 class="sub-title">Start using Cloud Memo by signing in or by registering for a new account.</h4>
+    </div>
     <button id="select-login" class="login-button">Login</button>
     <button id="select-register" class="login-button">Register</button>
   </div>
-  <div class="form-block login-row">
+  <div id="login-block" class="form-block login-row hide fadeOut">
     <h1>Login</h1>
     <form action="/authorize" method="POST" id="login-form">
-      <label for="login-username">Username</label>
-      <input id="login-username" type="text" name="username">
-      <label for="login-password">Password</label>
-      <input id="login-password" type="password" name="password">
+      <div class="login-row">
+        <label for="login-username">Username</label>
+        <input id="login-username" type="text" name="username">
+      </div>
+      <div class="login-row">
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" name="password">
+      </div>
       <input type="submit" value="Submit">
     </form>
+    <button class="login-btn-back">Back</button>
   </div>
-  <div class="form-block login-row">
+  <div id="register-block" class="form-block login-row hide fadeOut">
     <h1>Register</h1>
     <form action="/register" method="POST" id="register-form">
       <label for="register-username">Username</label>
@@ -45,7 +52,10 @@
       <input id="register-password" type="password" name="password">
       <input type="submit" value="Submit">
     </form>
+    <button class="login-btn-back">Back</button>
   </div>
 </body>
+
+<script src="js/login.js"></script>
 
 </html>

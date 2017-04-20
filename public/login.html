@@ -12,6 +12,8 @@
   <title>Cloud Memo | Login</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="css/common.css" type="text/css" rel="stylesheet">
   <link href="css/login.css" type="text/css" rel="stylesheet">
   <link rel="icon" type="image/png" href="/img/fav.ico" />
 </head>
@@ -23,36 +25,40 @@
   <div id="welcome-block" class="login-row">
     <h1>Welcome</h1>
     <div class="login-row">
-      <h4 class="sub-title">Start using Cloud Memo by signing in or by registering for a new account.</h4>
+      <h4 class="sub-title">Login to start using Cloud Memo</h4>
     </div>
-    <button id="select-login" class="login-button">Login</button>
-    <button id="select-register" class="login-button">Register</button>
+    <button id="select-login" class="login-button" tabindex="1">Login</button>
+    <button id="select-register" class="login-button" tabindex="2">Register</button>
   </div>
   <div id="login-block" class="form-block login-row hide fadeOut">
-    <h1>Login</h1>
+    <h2>Login</h2>
     <form action="/authorize" method="POST" id="login-form">
-      <div class="login-row">
-        <label for="login-username">Username</label>
-        <input id="login-username" type="text" name="username">
+      <div class="input-block">
+        <label for="login-username">Username:</label>
+        <input id="login-username" type="text" name="username" tabindex="3">
       </div>
-      <div class="login-row">
-        <label for="login-password">Password</label>
-        <input id="login-password" type="password" name="password">
+      <div class="input-block">
+        <label for="login-password">Password:</label>
+        <input id="login-password" type="password" name="password" tabindex="4">
       </div>
-      <input type="submit" value="Submit">
+      <button type="button" class="login-btn-back" tabindex="6">Back</button>
+      <button type="submit" tabindex="5">Submit</button>
     </form>
-    <button class="login-btn-back">Back</button>
   </div>
   <div id="register-block" class="form-block login-row hide fadeOut">
-    <h1>Register</h1>
+    <h2>Register</h2>
     <form action="/register" method="POST" id="register-form">
-      <label for="register-username">Username</label>
-      <input id="register-username" type="text" name="username">
-      <label for="register-password">Password</label>
-      <input id="register-password" type="password" name="password">
-      <input type="submit" value="Submit">
+      <div class="input-block">
+        <label for="register-username">Username</label>
+        <input id="register-username" type="text" name="username" tabindex="7">
+      </div>
+      <div class="input-block">
+        <label for="register-password">Password</label>
+        <input id="register-password" type="password" name="password" tabindex="8">
+      </div>
+      <button type="button" class="login-btn-back" tabindex="10">Back</button>
+      <button type="submit" tabindex="9">Submit</button>
     </form>
-    <button class="login-btn-back">Back</button>
   </div>
 </body>
 

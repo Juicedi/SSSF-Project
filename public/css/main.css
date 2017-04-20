@@ -1,10 +1,5 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
   background-color: #e5e5e5;
-}
-
-div {
-  box-sizing: border-box;
 }
 
 #add-project, #files, #editor {

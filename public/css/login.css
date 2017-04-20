@@ -1,5 +1,4 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
   background-image: url('../img/cloud-bg.jpg');
   background-size: cover;
 }
@@ -8,29 +7,12 @@ div {
   text-align: center;
 }
 
-button {
-  display: inline-block;
-  background-color: #fafafa;
-  padding: 0.7em 1em;
-  border: 0.2em #c3c3c3 solid;
-  border-radius: 0.5em;
-  margin: 0.5em;
-  cursor: pointer;
-  -webkit-transition: border-color 0.3s, box-shadow 0.3s;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-button:hover {
-  border-color: #5aaaff;
-  box-shadow: 0px 0px 5px 0px #5aaaff;
-}
-
 #welcome-block {
   position: absolute;
   -webkit-transform: translate(50%, 50%);
   transform: translate(50%, 50%);
   right: 50%;
-  bottom: 50%;
+  bottom: 70%;
   visibility: visible;
   opacity: 1;
   transition: opacity 0.666s, visiblity 0.666s;
@@ -41,7 +23,7 @@ button:hover {
   -webkit-transform: translate(50%, 50%);
   transform: translate(50%, 50%);
   right: 50%;
-  bottom: 50%;
+  bottom: 70%;
   visibility: visible;
   opacity: 1;
   transition: opacity 0.666s, visiblity 0.666s;
@@ -50,10 +32,6 @@ button:hover {
 .sub-title {
   display: inline-block;
   width: 25em;
-}
-
-.login-row {
-  width: 100%;
 }
 
 .hide {
@@ -69,3 +47,6 @@ button:hover {
   opacity: 0 !important;
 }
 
+.input-block {
+  padding: 0.7em 1em;
+}

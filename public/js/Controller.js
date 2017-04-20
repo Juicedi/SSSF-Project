@@ -26,7 +26,7 @@ class Controller {
   run() {
     model.setCurrentUser();
     model.getProjectTitles();
-    view.initAddForm();
+    view.initAddProject();
   }
 
   refresh() {

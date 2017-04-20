@@ -11,12 +11,20 @@ body {
   display: block;
 }
 
+#files-container {
+  position: relative;
+  display: inline-block;
+  width: 19em;
+  height: 50em;
+}
+
 #files {
   border-radius: 5px;
   background-color: #fff;
   padding: 5px;
-  height: 200px;
-  width: 500px;
+  height: 92%;
+  width: 100%;
+  overflow-y: scroll;
 }
 
 .file {
@@ -27,6 +35,13 @@ body {
   border-radius: 5px;
   margin: 5px;
   cursor: pointer;
+  -webkit-transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.file:hover {
+  border-color: #5aaaff;
+  box-shadow: 0 0 0.5em 0 #5aaaff;
 }
 
 #file-editor {
@@ -39,4 +54,23 @@ body {
 #file-title {
   display: block;
   margin: 10px 0 0 0;
+}
+
+#add-project {
+  position: absolute;
+  height: 3em;
+  width: 3em;
+  bottom: 0;
+  right: 1em;
+  border-radius: 50%;
+}
+
+#add-project::before {
+  content: '+';
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 49%;
+  left: 49%;
+  font-size: 3em;
+  color: #c3c3c3;
 }

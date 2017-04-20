@@ -55,5 +55,4 @@ button:hover {
 button:focus {
   outline: none;
   border-color: #5aaaff;
-  box-shadow: 0 0 0.5em 0 #5aaaff;
 }

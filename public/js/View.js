@@ -30,12 +30,9 @@ class View {
     files.innerHTML = htmlstring;
   }
 
-  initAddForm() {
-    document.getElementById('add-project-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const title = document.getElementById('add-title').value
-      const content = document.getElementById('add-content').value
-      controller.addProject(title, content);
+  initAddProject() {
+    document.getElementById('add-project').addEventListener('click', () => {
+      controller.addProject('New Project', '');
     });
   }
 

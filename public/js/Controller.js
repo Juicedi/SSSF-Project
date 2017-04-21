@@ -24,7 +24,7 @@ class Controller {
   }
 
   run() {
-    model.setCurrentUser();
+    model.setCurrentUser('u');
     model.getProjectTitles();
     view.initAddProject();
   }

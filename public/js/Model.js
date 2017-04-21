@@ -105,11 +105,13 @@ class Model {
    * Sets current user from url parameters.
    */
   setCurrentUser(name) {
-    const url = location.href;
-    name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-    const regexS = '[\\?&]' + name + '=([^&#]*)';
-    const regex = new RegExp(regexS);
-    const results = regex.exec(url);
-    this.user = results == null ? null : results[1];
+    if (typeof name !== 'undefined') {
+      const url = location.href;
+      name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+      const regexS = '[\\?&]' + name + '=([^&#]*)';
+      const regex = new RegExp(regexS);
+      const results = regex.exec(url);
+      this.user = results == null ? null : results[1];
+    }
   }
 }

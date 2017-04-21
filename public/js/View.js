@@ -24,7 +24,7 @@ class View {
     const files = document.getElementById('files');
 
     for (let title of data) {
-      htmlstring += `<div class="file" data-id="${data.indexOf(title)}">${title}</div>`
+      htmlstring += `<div class="file" data-id="${data.indexOf(title)}">${title}</div>`;
     }
 
     files.innerHTML = htmlstring;

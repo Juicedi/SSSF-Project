@@ -7,20 +7,20 @@ const reveal = (block) => {
       document.getElementById('welcome-block').classList.add('fadeOut');
       setTimeout(() => {
         document.getElementById('login-block').classList.remove('hide', 'fadeOut');
-      }, 680);
+      }, 350);
       break;
     case 'register':
       document.getElementById('welcome-block').classList.add('fadeOut');
       setTimeout(() => {
         document.getElementById('register-block').classList.remove('hide', 'fadeOut');
-      }, 680);
+      }, 350);
       break;
     case 'menu':
       document.getElementById('login-block').classList.add('fadeOut');
       document.getElementById('register-block').classList.add('fadeOut');
       setTimeout(() => {
         document.getElementById('welcome-block').classList.remove('fadeOut');
-      }, 680);
+      }, 350);
       break;
 
   }

@@ -18,7 +18,7 @@ div {
   background-color: rgba(255, 255, 255, 0.5);
   visibility: visible;
   opacity: 1;
-  transition: opacity 0.666s, visiblity 0.666s;
+  transition: opacity 0.333s, visiblity 0.333s;
 }
 
 .sub-title {
@@ -34,7 +34,7 @@ div {
 }
 
 .fadeOut {
-  transition: visibility 0.666s, opacity 0.666s, height 0.666s !important;
+  transition: visibility 0.333s, opacity 0.333s, height 0.333s !important;
   visibility: hidden !important;
   opacity: 0 !important;
 }

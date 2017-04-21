@@ -76,7 +76,7 @@ class Model {
 
   updateProject(id, title, content) {
     const myInit = {
-      method: "POST",
+      method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
@@ -92,7 +92,7 @@ class Model {
       }
 
       // Do something with the response
-      response.blob().then((data) => {
+      response.blob().then(() => {
         console.log('Update sent');
         controller.refresh();
       });
@@ -104,10 +104,10 @@ class Model {
   /**
    * Sets current user from url parameters.
    */
-  setCurrentUser() {
+  setCurrentUser(name) {
     const url = location.href;
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    const regexS = "[\\?&]" + name + "=([^&#]*)";
+    name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+    const regexS = '[\\?&]' + name + '=([^&#]*)';
     const regex = new RegExp(regexS);
     const results = regex.exec(url);
     this.user = results == null ? null : results[1];

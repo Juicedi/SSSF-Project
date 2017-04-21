@@ -4,7 +4,7 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "google",
+    "extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module"
     },

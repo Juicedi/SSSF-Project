@@ -43,9 +43,9 @@ class View {
   }
 
   sendUpdate() {
-    const title = document.getElementById('file-title').value
-    const content = document.getElementById('file-editor').value
-    controller.sendProjectUpdate(this._currentProject, title, content)
+    const title = document.getElementById('file-title').value;
+    const content = document.getElementById('file-editor').value;
+    controller.sendProjectUpdate(this._currentProject, title, content);
   }
 
 }

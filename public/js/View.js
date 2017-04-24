@@ -32,7 +32,7 @@ class View {
 
   initAddProject() {
     document.getElementById('add-project').addEventListener('click', () => {
-      controller.addProject('New Project', '');
+      controller.addProject();
     });
   }
 

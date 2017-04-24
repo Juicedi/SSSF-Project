@@ -19,8 +19,8 @@ class Controller {
     model.updateProject(id, title, content);
   }
 
-  addProject(title, content){
-    model.addProject(title, content);
+  addProject(){
+    model.addProject();
   }
 
   run() {

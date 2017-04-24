@@ -23,7 +23,7 @@ class Model {
 
   getProjectData(id) {
     const myInit = {
-      method: "POST",
+      method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
@@ -47,14 +47,14 @@ class Model {
     });
   }
 
-  addProject(title, content) {
+  addProject() {
     const myInit = {
-      method: "POST",
+      method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: 'title=' + title + '&content=' + content
-    }
+      body: 'username=' + this.user,
+    };
 
     const mRequest = new Request('/addProject');
     fetch(mRequest, myInit).then((response) => {
@@ -65,8 +65,8 @@ class Model {
       }
 
       // Do something with the response
-      response.blob().then((data) => {
-        console.log('Update sent');
+      response.blob().then(() => {
+        console.log('Project added');
         controller.refresh();
       });
     }).catch(function (err) {
@@ -81,7 +81,7 @@ class Model {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: 'id=' + id + '&title=' + title + '&content=' + content
-    }
+    };
 
     const mRequest = new Request('/updateProject');
     fetch(mRequest, myInit).then((response) => {

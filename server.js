@@ -95,6 +95,9 @@ const getTitles = () => {
 app.get('/', (req, res) => {
   res.redirect('/index.html');
 });
+app.get('/app', (req, res) => {
+  res.redirect('/index.html?u=' + req.user);
+});
 app.post('/project', (req, res) => {
   res.send(JSON.stringify(database[req.body.id]));
 });
@@ -105,15 +108,18 @@ app.post('/updateProject', (req, res) => {
   res.sendStatus(200);
 });
 app.post('/addProject', (req, res) => {
-  console.log(`Added project ${req.body.title}`);
+  console.log(`Added project ${req.body.username}`);
   const obj = {
-    user: '',
-    title: '',
+    user: req.body.username,
+    group: '',
+    shared: [],
+    comments: [],
+    title: 'new project',
     content: '',
   };
-  database.push(obj);
-  database[database.length - 1].title = req.body.title;
-  database[database.length - 1].content = req.body.content;
+  // Project.create(obj).then((post) => {
+  //   console.log(post.result);
+  // });
   res.sendStatus(200);
 });
 app.get('/projects', (req, res) => {
@@ -121,7 +127,7 @@ app.get('/projects', (req, res) => {
 });
 app.post('/authorize',
   passport.authenticate('local', {
-    successRedirect: '/index.html',
+    successRedirect: '/app',
     failureRedirect: '/login',
     failureFlash: true,
   })

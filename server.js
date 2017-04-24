@@ -17,19 +17,8 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${proc
   console.log('Connection to db failed: ' + err);
 });
 
-const Schema = mongoose.Schema;
-const projectSchema = new Schema({
-  user: String,
-  title: String,
-  content: String,
-});
-const proUserSchema = new Schema({
-  username: String,
-  password: String,
-});
-
-const Project = mongoose.model('Project', projectSchema);
-const ProUser = mongoose.model('ProUser', proUserSchema);
+const Project = require('./modules/projectSchema.js');
+const ProUser = require('./modules/projectUserSchema.js');
 
 app.use(bParser.urlencoded({ extended: true }));
 

@@ -1,0 +1,7 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const proUserSchema = new Schema({
+  username: String,
+  password: String,
+});
+module.exports = mongoose.model('ProUser', proUserSchema);

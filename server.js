@@ -87,7 +87,7 @@ const getTitles = () => {
 };
 /*------------------ Temp DB :) ----------------------*/
 
-// ProUser.find((err, results) => {
+// Project.find((err, results) => {
 //   console.log(results);
 // });
 
@@ -117,9 +117,9 @@ app.post('/addProject', (req, res) => {
     title: 'new project',
     content: '',
   };
-  // Project.create(obj).then((post) => {
-  //   console.log(post.result);
-  // });
+  Project.create(obj).then((post) => {
+    console.log(post.result);
+  });
   res.sendStatus(200);
 });
 app.get('/projects', (req, res) => {

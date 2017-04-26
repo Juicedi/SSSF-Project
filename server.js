@@ -8,7 +8,17 @@ const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
 const express = require('express');
 require('dotenv').config();
+const fs = require('fs');
+
+const sslkey = fs.readFileSync('ssl-key.pem');
+const sslcert = fs.readFileSync('ssl-cert.pem');
+const options = {
+  key: sslkey,
+  cert: sslcert
+};
 const app = express();
+
+https.createServer(options, app).listen(3000);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB}`).then(() => {
@@ -65,48 +75,22 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-/*------------------ Temp DB :) ----------------------*/
-let database = [
-  {
-    user: 'test',
-    title: 'firstproject',
-    content: 'wasdwasdwasd qwerqwerqwre project!'
-  },
-  {
-    user: 'test',
-    title: 'proper project',
-    content: 'Kissa (ransk. chat) on eräänlainen tappavaa eläintä muistuttava hirvittävä peto, joka on ulkonäöltään karvainen olento (Myös karvattomia löytyy). Se kiljaisee hännän päälle astuttaessa ja saattaa pahimmillaan syödä koskemattomuuttaan loukanneen henkilön. Kissalla on tunnusomaiset korvat, silmät, etujalat ja valkotäpläinen ruotomainen häntä, jonka avulla se kykenee muun muassa tasapainoilemaan piha-aidan harjalla ja koivunoksalla. Kun kissa tapaa vihollisen, jonka se arvioi olevan sitä itseään voimakkaampi, se tipauttaa kaikki karvansa ja pakenee karvanlähdön suoman paniikinomaisen hämmästyksen turvin.',
-  }
-];
-const getTitles = () => {
-  let array = [];
-  for (let project of database) {
-    array.push(project.title);
-  }
-  return array;
-};
-/*------------------ Temp DB :) ----------------------*/
-
-// Project.find((err, results) => {
-//   console.log(results);
-// });
-
 // Gets
 app.get('/', (req, res) => {
-  res.redirect('/index.html');
+  res.redirect('/login');
 });
 app.get('/app', (req, res) => {
   res.redirect('/index.html?u=' + req.user);
 });
-app.post('/project', (req, res) => {
-  res.send(JSON.stringify(database[req.body.id]));
-});
-app.post('/updateProject', (req, res) => {
-  console.log(`Updated ${req.body.title}`);
-  database[req.body.id].title = req.body.title;
-  database[req.body.id].content = req.body.content;
-  res.sendStatus(200);
-});
+// app.post('/project', (req, res) => {
+//   res.send(JSON.stringify(database[req.body.id]));
+// });
+// app.post('/updateProject', (req, res) => {
+//   console.log(`Updated ${req.body.title}`);
+//   database[req.body.id].title = req.body.title;
+//   database[req.body.id].content = req.body.content;
+//   res.sendStatus(200);
+// });
 app.post('/addProject', (req, res) => {
   console.log(`Added project ${req.body.username}`);
   const obj = {
@@ -123,7 +107,16 @@ app.post('/addProject', (req, res) => {
   res.sendStatus(200);
 });
 app.get('/projects', (req, res) => {
-  res.send(getTitles());
+  Project.find((err, results) => {
+    if (err) {
+      res.sendStatus(502);
+    }
+    let titles = [];
+    for (const object of results) {
+      titles.push(object.title);
+    }
+    res.send(titles);
+  });
 });
 app.post('/authorize',
   passport.authenticate('local', {
@@ -148,4 +141,7 @@ app.get('/login', (req, res) => {
   res.redirect('login.html');
 });
 
-app.listen(3000);
+http.createServer((req, res) => {
+  res.writeHead(301, { 'Location': 'https://localhost:3000' + req.url });
+  res.end();
+}).listen(8080);

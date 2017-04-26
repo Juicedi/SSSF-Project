@@ -9,12 +9,18 @@ const passwordHash = require('password-hash');
 const express = require('express');
 require('dotenv').config();
 const fs = require('fs');
+const middlewares = require('middlewares');
 
 const sslkey = fs.readFileSync('ssl-key.pem');
 const sslcert = fs.readFileSync('ssl-cert.pem');
 const options = {
   key: sslkey,
   cert: sslcert
+};
+const sessionConfig = {
+  secret: 'asd',
+  resave: true,
+  saveUninitialized: true,
 };
 const app = express();
 
@@ -66,20 +72,10 @@ passport.deserializeUser((user, done) => {
   console.log(user);
   return done(null, user);
 });
-app.use(session({
-  secret: 'asd',
-  resave: true,
-  saveUninitialized: true,
-}));
+app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req, res, next) => {
-  if (req.user == null && req.path.indexOf('app') !== -1) {
-    console.log('redirecting from path: ' + req.path);
-    res.redirect('/login.html');
-  }
-  next();
-});
+app.use(middlewares.redirectIfNotUser);
 app.use(express.static('public'));
 
 

@@ -22,7 +22,7 @@ https.createServer(options, app).listen(3000);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB}`).then(() => {
-  console.log('Connected successfully.');
+  console.log('Connected to database successfully.');
 }, err => {
   console.log('Connection to db failed: ' + err);
 });
@@ -106,10 +106,11 @@ app.post('/addProject', (req, res) => {
   });
   res.sendStatus(200);
 });
-app.get('/projects', (req, res) => {
-  Project.find((err, results) => {
+app.post('/projects', (req, res) => {
+  console.log('Searching titles for the user: ' + req.body.username);
+  Project.find().where('user').equals(req.body.username).exec().then((results, err) => {
     if (err) {
-      res.sendStatus(502);
+      res.status(500).send(err);
     }
     let titles = [];
     for (const object of results) {

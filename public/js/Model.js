@@ -3,9 +3,16 @@ class Model {
     this.user = 'test';
   }
 
-  getProjectTitles() {
+  getProjectTitles() {    
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'username=' + this.user,
+    };
     const mRequest = new Request('/projects');
-    fetch(mRequest).then((response) => {
+    fetch(mRequest, myInit).then((response) => {
       if (!response.ok) {
         console.log('Error! Status Code: ' +
           response.status);
@@ -28,7 +35,7 @@ class Model {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: 'id=' + id
-    }
+    };
 
     const mRequest = new Request('/project');
     fetch(mRequest, myInit).then((response) => {

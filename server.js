@@ -66,7 +66,6 @@ passport.deserializeUser((user, done) => {
   console.log(user);
   return done(null, user);
 });
-app.use(express.static('public'));
 app.use(session({
   secret: 'asd',
   resave: true,
@@ -74,13 +73,21 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use((req, res, next) => {
+  if (req.user == null && req.path.indexOf('app') !== -1) {
+    console.log('redirecting from path: ' + req.path);
+    res.redirect('/login.html');
+  }
+  next();
+});
+app.use(express.static('public'));
 
-// Gets
+
 app.get('/', (req, res) => {
-  res.redirect('/login');
+  res.redirect('/login.html');
 });
 app.get('/app', (req, res) => {
-  res.redirect('/index.html?u=' + req.user);
+  res.redirect('/app.html?u=' + req.user);
 });
 // app.post('/project', (req, res) => {
 //   res.send(JSON.stringify(database[req.body.id]));
@@ -102,7 +109,7 @@ app.post('/addProject', (req, res) => {
     content: '',
   };
   Project.create(obj).then((post) => {
-    console.log(post.result);
+    console.log(post);
   });
   res.sendStatus(200);
 });

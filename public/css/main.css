@@ -76,7 +76,7 @@ body {
 }
 
 .firepad {
-  width: 700px;
-  height: 450px;
+  width: 700px !important;
+  height: 450px !important;
   background-color: #f62; /* dark orange background */
 }

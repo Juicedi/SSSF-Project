@@ -61,13 +61,17 @@ class View {
     firebase.initializeApp(config);
 
     // Get Firebase Database reference.
-    const firepadRef = firebase.database().ref();
+    var firepadRef = firebase.database().ref();
 
-    // Create Ace editor.
-    const editor = ace.edit('firepad');
+    // Create CodeMirror (with lineWrapping on).
+    var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true });
 
-    // Create Firepad.
-    const firepad = Firepad.fromACE(firepadRef, editor);
+    // Create Firepad (with rich text toolbar and shortcuts enabled).
+    var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+      richTextShortcuts: true,
+      richTextToolbar: true,
+      defaultText: 'Hello, World!'
+    });
   }
 
 }

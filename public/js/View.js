@@ -48,4 +48,26 @@ class View {
     controller.sendProjectUpdate(this._currentProject, title, content);
   }
 
+  initFirepad() {
+    // Initialize Firebase
+    const config = {
+      apiKey: 'AIzaSyB8efsX9zicXI67EsOV1zk2c8uILLzK_zg',
+      authDomain: 'cloud-memo-5acd0.firebaseapp.com',
+      databaseURL: 'https://cloud-memo-5acd0.firebaseio.com',
+      projectId: 'cloud-memo-5acd0',
+      storageBucket: 'cloud-memo-5acd0.appspot.com',
+      messagingSenderId: '422849767526'
+    };
+    firebase.initializeApp(config);
+
+    // Get Firebase Database reference.
+    const firepadRef = firebase.database().ref();
+
+    // Create Ace editor.
+    const editor = ace.edit('firepad');
+
+    // Create Firepad.
+    const firepad = Firepad.fromACE(firepadRef, editor);
+  }
+
 }

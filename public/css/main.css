@@ -74,3 +74,9 @@ body {
   font-size: 3em;
   color: #c3c3c3;
 }
+
+.firepad {
+  width: 700px;
+  height: 450px;
+  background-color: #f62; /* dark orange background */
+}

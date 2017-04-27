@@ -9,7 +9,7 @@ const passwordHash = require('password-hash');
 const express = require('express');
 require('dotenv').config();
 const fs = require('fs');
-const middlewares = require('middlewares');
+const middlewares = require('./modules/middlewares.js');
 
 const sslkey = fs.readFileSync('ssl-key.pem');
 const sslcert = fs.readFileSync('ssl-cert.pem');
@@ -85,15 +85,6 @@ app.get('/', (req, res) => {
 app.get('/app', (req, res) => {
   res.redirect('/app.html?u=' + req.user);
 });
-// app.post('/project', (req, res) => {
-//   res.send(JSON.stringify(database[req.body.id]));
-// });
-// app.post('/updateProject', (req, res) => {
-//   console.log(`Updated ${req.body.title}`);
-//   database[req.body.id].title = req.body.title;
-//   database[req.body.id].content = req.body.content;
-//   res.sendStatus(200);
-// });
 app.post('/addProject', (req, res) => {
   console.log(`Added project ${req.body.username}`);
   const obj = {

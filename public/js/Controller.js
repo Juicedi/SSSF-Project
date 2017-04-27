@@ -27,6 +27,7 @@ class Controller {
     model.setCurrentUser('u');
     model.getProjectTitles();
     view.initAddProject();
+    view.initFirepad();
   }
 
   refresh() {

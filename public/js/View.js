@@ -36,12 +36,6 @@ class View {
     });
   }
 
-  initSaveButton() {
-    document.getElementById('update').addEventListener('click', () => {
-      this.sendUpdate();
-    });
-  }
-
   sendUpdate() {
     const title = document.getElementById('file-title').value;
     const content = document.getElementById('file-editor').value;

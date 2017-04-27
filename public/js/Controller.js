@@ -4,7 +4,6 @@ class Controller {
   handleProjectTitles(data) {
     view.showProjects(data);
     view.initFileBtn();
-    view.initSaveButton();
   }
 
   getProjectData(id) {

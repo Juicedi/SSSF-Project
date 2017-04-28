@@ -1,3 +1,4 @@
+'use strict';
 const mongoose = require('mongoose');
 const bParser = require('body-parser');
 const session = require('express-session');

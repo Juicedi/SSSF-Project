@@ -1,3 +1,4 @@
+'use strict';
 class Model {
   constructor() {
     this.user = 'test';

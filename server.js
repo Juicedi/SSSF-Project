@@ -12,12 +12,6 @@ require('dotenv').config();
 const fs = require('fs');
 const middlewares = require('./modules/middlewares.js');
 
-const sslkey = fs.readFileSync('ssl-key.pem');
-const sslcert = fs.readFileSync('ssl-cert.pem');
-const options = {
-  key: sslkey,
-  cert: sslcert
-};
 const sessionConfig = {
   secret: 'asd',
   resave: true,
@@ -25,7 +19,32 @@ const sessionConfig = {
 };
 const app = express();
 
-https.createServer(options, app).listen(3000);
+if (process.env.ENV == 'dev') {
+  const sslkey = fs.readFileSync('ssl-key.pem');
+  const sslcert = fs.readFileSync('ssl-cert.pem');
+  const options = {
+    key: sslkey,
+    cert: sslcert
+  };
+  https.createServer(options, app).listen(3000);
+} else {
+  app.enable('trust proxy');
+
+  // Add a handler to inspect the req.secure flag (see 
+  // http://expressjs.com/api#req.secure). This allows us 
+  // to know whether the request was via http or https.
+  // https://github.com/aerwin/https-redirect-demo/blob/master/server.js
+  app.use((req, res, next) => {
+    if (req.secure) {
+      // request was via https, so do no special handling
+      next();
+    } else {
+      // request was via http, so redirect to https
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+  });
+  app.listen(3000);
+}
 
 mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB}`).then(() => {

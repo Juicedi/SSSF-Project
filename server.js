@@ -76,7 +76,7 @@ passport.use(new LocalStrategy(
   }
 ));
 
-// add the user in session
+// Add the user in session
 passport.serializeUser((user, done) => {
   console.log('serializeUser');
   console.log(user.username);

@@ -29,11 +29,6 @@ if (process.env.ENV == 'dev') {
   https.createServer(options, app).listen(3000);
 } else {
   app.enable('trust proxy');
-
-  // Add a handler to inspect the req.secure flag (see 
-  // http://expressjs.com/api#req.secure). This allows us 
-  // to know whether the request was via http or https.
-  // https://github.com/aerwin/https-redirect-demo/blob/master/server.js
   app.use((req, res, next) => {
     if (req.secure) {
       // request was via https, so do no special handling

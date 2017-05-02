@@ -11,6 +11,7 @@ const express = require('express');
 require('dotenv').config();
 const fs = require('fs');
 const middlewares = require('./modules/middlewares.js');
+const socketFunc = require('./modules/socketFunc.js');
 
 const sessionConfig = {
   secret: 'asd',
@@ -18,6 +19,14 @@ const sessionConfig = {
   saveUninitialized: true,
 };
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+let room1 = 'abc123';
+
+// Handle incoming connections from clients
+io.sockets.on('connection', (socket) => {
+  socketFunc.initSockets(socket, io, room1);
+});
 
 if (process.env.ENV == 'dev') {
   const sslkey = fs.readFileSync('ssl-key.pem');
@@ -155,3 +164,7 @@ http.createServer((req, res) => {
   res.writeHead(301, { 'Location': 'https://localhost:3000' + req.url });
   res.end();
 }).listen(8080);
+
+server.listen(3001, function () {
+  console.log('Server started (3001)');
+});

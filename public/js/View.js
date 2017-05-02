@@ -43,29 +43,60 @@ class View {
     controller.sendProjectUpdate(this._currentProject, title, content);
   }
 
-  initFirepad() {
-    // Initialize Firebase
-    const config = {
-      apiKey: 'AIzaSyB8efsX9zicXI67EsOV1zk2c8uILLzK_zg',
-      authDomain: 'cloud-memo-5acd0.firebaseapp.com',
-      databaseURL: 'https://cloud-memo-5acd0.firebaseio.com',
-      projectId: 'cloud-memo-5acd0',
-      storageBucket: 'cloud-memo-5acd0.appspot.com',
-      messagingSenderId: '422849767526'
-    };
-    firebase.initializeApp(config);
+  initSockets() {
+    const userForm = document.getElementById('user-form');
+    const username = document.getElementById('username');
+    const clientmsg = document.getElementById('client-message');
+    const roomForm = document.getElementById('room-form');
+    const roomInput = document.getElementById('room-input');
+    const socket = io.connect('http://localhost:3000');
+    let room = 'test';
 
-    // Get Firebase Database reference.
-    var firepadRef = firebase.database().ref();
+    const removeMessages = () => {
+      const messages = document.getElementsByClassName('received-message');
+      const elems = messages.length;
+      for (let i = elems - 1; i >= 0; i--) {
+        messages[i].parentNode.removeChild(messages[i]);
+      }
+    }
+    const changeRoom = (param) => {
+      console.log('changing room');
+      removeMessages();
+      room = param;
+      socket.emit('room', param);
+    }
+    const sendMessage = () => {
+      let msg = {};
+      msg.app_id = this.appName;
+      msg.time = Date.now();
+      msg.json = 'json';
+      msg.text = clientmsg.value;
+      msg.username = username.value;
+      msg.room = room;
+      socket.json.emit('message', msg);
+    }
 
-    // Create CodeMirror (with lineWrapping on).
-    var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true });
+    socket.on('connect', function () {
+      // Connected, let's sign-up for to receive messages for this room
+      console.log('socket.io connected!');
+      socket.emit('room', room);
+    });
+    socket.on('message', function (data) {
+      console.log('Incoming message:', data);
+      document.getElementById('chat-table').innerHTML += `<tr class="received-message"><td>${data.username}</td><td>${data.msg}</td></tr>`;
+    });
+    socket.on('disconnect', function () {
+      console.log('socket.io disconnected!');
+    });
 
-    // Create Firepad (with rich text toolbar and shortcuts enabled).
-    var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-      richTextShortcuts: true,
-      richTextToolbar: true,
-      defaultText: 'Hello, World!'
+    userForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendMessage();
+      console.log('sent text');
+    });
+    roomForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      changeRoom(roomInput.value);
     });
   }
 

@@ -7,8 +7,9 @@ class PB2 {
     this.appName = appName;
     this.socket = io(serverURL, {
       extraHeaders: {
-        'Access-Control-Allow-Origin': "Bearer authorization_token_here"
-      });
+        'Access-Control-Allow-Origin': 'Bearer authorization_token_here',
+      },
+    });
     this.connect(this.appName, this.socket);
   }
 

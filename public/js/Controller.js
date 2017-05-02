@@ -1,6 +1,6 @@
 'use strict';
 class Controller {
-  constructor() {}
+  constructor() { }
 
   handleProjectTitles(data) {
     view.showProjects(data);
@@ -15,11 +15,11 @@ class Controller {
     view.updateFileEditor(data);
   }
 
-  sendProjectUpdate(id, title, content){
+  sendProjectUpdate(id, title, content) {
     model.updateProject(id, title, content);
   }
 
-  addProject(){
+  addProject() {
     model.addProject();
   }
 
@@ -27,8 +27,9 @@ class Controller {
     model.setCurrentUser('u');
     model.getProjectTitles();
     view.initAddProject();
-    view.initPBReceiver();
-    view.initEditorListener();
+    // view.initPBReceiver();
+    // view.initEditorListener();
+    view.initSockets();
   }
 
   refresh() {

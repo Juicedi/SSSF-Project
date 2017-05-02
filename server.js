@@ -8,25 +8,42 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
 const express = require('express');
+const app = express();
 require('dotenv').config();
 const fs = require('fs');
 const middlewares = require('./modules/middlewares.js');
 const socketFunc = require('./modules/socketFunc.js');
+
+const io = require('socket.io')(3001);
+
+// handle incoming connections from clients
+io.sockets.on('connection', (socket) => {
+  // once a client has connected, we expect to get a ping from them saying what room they want to join
+  console.log(socket.id + ' connected');
+  socket.on('room', (room) => {
+    socket.leaveAll();
+    console.log(room);
+    socket.join(room);
+    console.log(socket.rooms);
+  });
+  socket.on('message', (jsonMsg) => {
+    console.log('received message from client: ' + JSON.stringify(jsonMsg));
+    const response = {
+      username: jsonMsg.username,
+      msg: jsonMsg.text
+    };
+    io.in(jsonMsg.room).emit('message', response);
+  });
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 const sessionConfig = {
   secret: 'asd',
   resave: true,
   saveUninitialized: true,
 };
-const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-let room1 = 'abc123';
-
-// Handle incoming connections from clients
-io.sockets.on('connection', (socket) => {
-  socketFunc.initSockets(socket, io, room1);
-});
 
 if (process.env.ENV == 'dev') {
   const sslkey = fs.readFileSync('ssl-key.pem');
@@ -164,7 +181,3 @@ http.createServer((req, res) => {
   res.writeHead(301, { 'Location': 'https://localhost:3000' + req.url });
   res.end();
 }).listen(8080);
-
-server.listen(3001, function () {
-  console.log('Server started (3001)');
-});

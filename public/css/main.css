@@ -48,6 +48,7 @@ body {
   display: block;
   margin: 10px 0 10px 0;
   width: 500px;
+  height: 500px;
   resize: none;
 }
 

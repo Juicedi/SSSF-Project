@@ -1,5 +1,5 @@
 module.exports = {
-  initSockets: (socket, io, room) => {
+  initSockets: (socket, io) => {
     // once a client has connected, we expect to get a ping from them saying what room they want to join
     console.log(socket.id + ' connected');
     socket.on('room', (room) => {
@@ -11,8 +11,7 @@ module.exports = {
     socket.on('message', (jsonMsg) => {
       console.log('received message from client: ' + JSON.stringify(jsonMsg));
       const response = {
-        username: jsonMsg.username,
-        msg: jsonMsg.text
+        msg: 'testi teksti'
       };
       io.in(jsonMsg.room).emit('message', response);
     });

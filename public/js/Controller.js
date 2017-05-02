@@ -28,7 +28,7 @@ class Controller {
     model.getProjectTitles();
     view.initAddProject();
     // view.initPBReceiver();
-    // view.initEditorListener();
+    view.initEditorListener();
     view.initSockets();
   }
 

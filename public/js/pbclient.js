@@ -5,7 +5,10 @@ class PB2 {
 
   constructor(serverURL, appName) {
     this.appName = appName;
-    this.socket = io(serverURL);
+    this.socket = io(serverURL, {
+      extraHeaders: {
+        'Access-Control-Allow-Origin': "Bearer authorization_token_here"
+      });
     this.connect(this.appName, this.socket);
   }
 

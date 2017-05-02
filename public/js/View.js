@@ -2,6 +2,9 @@
 class View {
   constructor() {
     this.currentProject = '';
+    this.pb2 = new PB2('https://pb2-serverless.jelastic.metropolia.fi', 'cloudmemo');
+    this.socket = io.connect('http://localhost:3001');
+    this.room = 'test';
   }
 
   initFileBtn() {
@@ -13,11 +16,6 @@ class View {
         controller.getProjectData(projectId);
       }, this);
     }
-  }
-
-  updateFileEditor(data) {
-    document.getElementById('file-title').value = data.title;
-    document.getElementById('file-editor').value = data.content;
   }
 
   showProjects(data) {
@@ -43,60 +41,44 @@ class View {
     controller.sendProjectUpdate(this._currentProject, title, content);
   }
 
+  initPBReceiver() {
+    function onMessage(data) {
+      console.log('vastaanotettiin JSON-viesti: ' + data);
+    }
+    this.pb2.setReceiver(onMessage);
+  }
+
+  initEditorListener() {
+    const editor = document.getElementById('file-editor');
+    editor.addEventListener('change', () => {
+      const text = editor.value;
+      this.sendToPB(text);
+    });
+  }
+
+  sendToPB(text) {
+    this.pb2.sendJson({
+      input: 'jotakin',
+      content: text,
+    });
+  }
+
+  sendMessage() {
+    let msg = {};
+    this.socket.json.emit('message', msg);
+  }
+
   initSockets() {
-    const userForm = document.getElementById('user-form');
-    const username = document.getElementById('username');
-    const clientmsg = document.getElementById('client-message');
-    const roomForm = document.getElementById('room-form');
-    const roomInput = document.getElementById('room-input');
-    const socket = io.connect('http://localhost:3000');
-    let room = 'test';
-
-    const removeMessages = () => {
-      const messages = document.getElementsByClassName('received-message');
-      const elems = messages.length;
-      for (let i = elems - 1; i >= 0; i--) {
-        messages[i].parentNode.removeChild(messages[i]);
-      }
-    };
-    const changeRoom = (param) => {
-      console.log('changing room');
-      removeMessages();
-      room = param;
-      socket.emit('room', param);
-    };
-    const sendMessage = () => {
-      let msg = {};
-      msg.app_id = this.appName;
-      msg.time = Date.now();
-      msg.json = 'json';
-      msg.text = clientmsg.value;
-      msg.username = username.value;
-      msg.room = room;
-      socket.json.emit('message', msg);
-    };
-
-    socket.on('connect', function () {
+    this.socket.on('connect', () => {
       // Connected, let's sign-up for to receive messages for this room
       console.log('socket.io connected!');
-      socket.emit('room', room);
+      this.socket.emit('room', this.room);
     });
-    socket.on('message', function (data) {
+    this.socket.on('message', (data) => {
       console.log('Incoming message:', data);
-      document.getElementById('chat-table').innerHTML += `<tr class="received-message"><td>${data.username}</td><td>${data.msg}</td></tr>`;
     });
-    socket.on('disconnect', function () {
+    this.socket.on('disconnect', () => {
       console.log('socket.io disconnected!');
-    });
-
-    userForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      sendMessage();
-      console.log('sent text');
-    });
-    roomForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      changeRoom(roomInput.value);
     });
   }
 

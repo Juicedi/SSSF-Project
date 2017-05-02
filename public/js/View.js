@@ -58,13 +58,13 @@ class View {
       for (let i = elems - 1; i >= 0; i--) {
         messages[i].parentNode.removeChild(messages[i]);
       }
-    }
+    };
     const changeRoom = (param) => {
       console.log('changing room');
       removeMessages();
       room = param;
       socket.emit('room', param);
-    }
+    };
     const sendMessage = () => {
       let msg = {};
       msg.app_id = this.appName;
@@ -74,7 +74,7 @@ class View {
       msg.username = username.value;
       msg.room = room;
       socket.json.emit('message', msg);
-    }
+    };
 
     socket.on('connect', function () {
       // Connected, let's sign-up for to receive messages for this room

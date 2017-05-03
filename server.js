@@ -47,11 +47,7 @@ if (process.env.ENV == 'dev') {
       res.redirect('https://' + req.headers.host + req.url);
     }
   });
-  const server = app.listen(3000);
-  const io = require('socket.io').listen(server);
-  io.sockets.on('connection', (socket) => {
-    socketFunc.initSockets(socket, io);
-  });
+  app.listen(3000);
 }
 
 mongoose.Promise = global.Promise;

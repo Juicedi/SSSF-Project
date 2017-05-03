@@ -73,7 +73,7 @@ class View {
     msg.json = 'json';
     msg.text = text;
     msg.username = 'nimi';
-    msg.room = 'huone';
+    msg.room = this.room;
     msg.cursorStart = cursorStart;
     msg.cursorEnd = cursorEnd;
     this.socket.json.emit('message', msg);
@@ -87,6 +87,8 @@ class View {
     });
     this.socket.on('message', (data) => {
       console.log('Incoming message:', data);
+      const editor = document.getElementById('file-editor');
+      editor.value = data.msg;
     });
     this.socket.on('disconnect', () => {
       console.log('socket.io disconnected!');

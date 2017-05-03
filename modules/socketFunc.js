@@ -11,7 +11,7 @@ module.exports = {
     socket.on('message', (jsonMsg) => {
       console.log('received message from client: ' + JSON.stringify(jsonMsg));
       const response = {
-        msg: 'testi teksti'
+        msg: jsonMsg.text,
       };
       io.in(jsonMsg.room).emit('message', response);
     });

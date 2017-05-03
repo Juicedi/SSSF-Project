@@ -82,13 +82,39 @@ class Model {
     });
   }
 
-  updateProject(id, title, content) {
+  updateProjectTitle(id, title) {
     const myInit = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: 'id=' + id + '&title=' + title + '&content=' + content
+      body: 'id=' + id + '&title=' + title
+    };
+
+    const mRequest = new Request('/updateProjectTitle');
+    fetch(mRequest, myInit).then((response) => {
+      if (!response.ok) {
+        console.log('Error! Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Do something with the response
+      response.blob().then(() => {
+        console.log('Title update sent');
+      });
+    }).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+  updateProject(id, content) {
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + id + '&content=' + content
     };
 
     const mRequest = new Request('/updateProject');
@@ -102,6 +128,32 @@ class Model {
       // Do something with the response
       response.blob().then(() => {
         console.log('Update sent');
+      });
+    }).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+  removeProject(id) {
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + id,
+    };
+
+    const mRequest = new Request('/removeProject');
+    fetch(mRequest, myInit).then((response) => {
+      if (!response.ok) {
+        console.log('Error! Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Do something with the response
+      response.blob().then(() => {
+        console.log('Remove sent');
         controller.refresh();
       });
     }).catch(function (err) {

@@ -62,6 +62,7 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${proc
 
 const Project = require('./modules/projectSchema.js');
 const ProUser = require('./modules/projectUserSchema.js');
+const openedFiles = {};
 
 app.use(bParser.urlencoded({ extended: true }));
 
@@ -105,12 +106,22 @@ app.use(passport.session());
 app.use(middlewares.redirectIfNotUser);
 app.use(express.static('public'));
 
+Project.find().exec().then((projects) => {
+  console.log(projects);
+});
 
 app.get('/', (req, res) => {
   res.redirect('/login.html');
 });
 app.get('/app', (req, res) => {
   res.redirect('/app.html?u=' + req.user);
+});
+app.post('/project', (req, res) => {
+  console.log('body: ' + JSON.stringify(req.body));
+  Project.find().where('_id').equals(req.body.id).exec().then((project) => {
+    console.log(project);
+    res.send(project);
+  });
 });
 app.post('/addProject', (req, res) => {
   console.log(`Added project ${req.body.username}`);
@@ -119,11 +130,37 @@ app.post('/addProject', (req, res) => {
     group: '',
     shared: [],
     comments: [],
-    title: 'new project',
-    content: '',
+    title: 'New Project',
+    content: 'Placeholder Text',
   };
   Project.create(obj).then((post) => {
     console.log(post);
+  });
+  res.sendStatus(200);
+});
+app.post('/updateProject', (req, res) => {
+  const query = {
+    _id: req.body.id,
+  };
+  const data = {
+    _id: req.body.id,
+    content: req.body.content,
+  };
+  Project.update(query, data).then((post) => {
+    console.log(post.result);
+  });
+  res.sendStatus(200);
+});
+app.post('/updateProjectTitle', (req, res) => {
+  const query = {
+    _id: req.body.id,
+  };
+  const data = {
+    _id: req.body.id,
+    title: req.body.title,
+  };
+  Project.update(query, data).then((post) => {
+    console.log(post.result);
   });
   res.sendStatus(200);
 });
@@ -133,11 +170,7 @@ app.post('/projects', (req, res) => {
     if (err) {
       res.status(500).send(err);
     }
-    let titles = [];
-    for (const object of results) {
-      titles.push(object.title);
-    }
-    res.send(titles);
+    res.send(results);
   });
 });
 app.post('/authorize',
@@ -161,6 +194,12 @@ app.post('/register', (req, res) => {
 });
 app.get('/login', (req, res) => {
   res.redirect('login.html');
+});
+app.post('/removeProject', (req, res) => {
+  Project.remove({ _id: req.body.id }).then((post) => {
+    console.log(post);
+    res.sendStatus(200);
+  });
 });
 
 http.createServer((req, res) => {

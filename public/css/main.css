@@ -1,10 +1,24 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
 body {
   background-color: #e5e5e5;
+  height: 100%;
+  margin: 0;
 }
 
 #add-project, #files, #editor {
   display: inline-block;
   vertical-align: top;
+  height: 99%;
 }
 
 #add-project textarea, #add-project input {
@@ -13,27 +27,26 @@ body {
 
 #files-container {
   position: relative;
+  background-color: #fff;
   display: inline-block;
+  vertical-align: top;
   width: 19em;
-  height: 50em;
+  height: 99%;
+  overflow-y: scroll;
 }
 
 #files {
-  border-radius: 5px;
-  background-color: #fff;
-  padding: 5px;
-  height: 92%;
-  width: 100%;
+  display: inline;
   overflow-y: scroll;
 }
 
 .file {
+  user-select: none;
   display: inline-block;
   background-color: #fafafa;
   padding: 10px;
   border: 2px #f2f2f2 solid;
-  border-radius: 5px;
-  margin: 5px;
+  width: 100%;
   cursor: pointer;
   -webkit-transition: border-color 0.3s, box-shadow 0.3s;
   transition: border-color 0.3s, box-shadow 0.3s;
@@ -41,14 +54,19 @@ body {
 
 .file:hover {
   border-color: #5aaaff;
-  box-shadow: 0 0 0.5em 0 #5aaaff;
+}
+
+.file.active {
+  background-color: #5aaaff;
+  color: #fff;
+  border-color: #5aaaff;
 }
 
 #file-editor {
   display: block;
-  margin: 10px 0 10px 0;
+  margin: 0;
   width: 500px;
-  height: 500px;
+  height: 100%;
   resize: none;
 }
 
@@ -58,11 +76,9 @@ body {
 }
 
 #add-project {
-  position: absolute;
+  position: relative;
   height: 3em;
   width: 3em;
-  bottom: 0;
-  right: 1em;
   border-radius: 50%;
 }
 
@@ -74,10 +90,4 @@ body {
   left: 49%;
   font-size: 3em;
   color: #c3c3c3;
-}
-
-.firepad {
-  width: 700px !important;
-  height: 450px !important;
-  background-color: #f62; /* dark orange background */
 }

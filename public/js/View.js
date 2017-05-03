@@ -1,5 +1,6 @@
 'use strict';
 class View {
+
   constructor() {
     this.currentProject = '';
     // this.pb2 = new PB2('https://pb2-serverless.jelastic.metropolia.fi', 'cloudmemo');
@@ -13,7 +14,29 @@ class View {
       files[i].addEventListener('click', (e) => {
         const projectId = e.target.dataset.id;
         this._currentProject = projectId;
+        for (let i = 0; i < files.length; i++) {
+          files[i].classList.remove('active');
+        }
+        e.target.classList.add('active');
+        this.changeRoom(e.target.dataset.id);
         controller.getProjectData(projectId);
+      }, this);
+      files[i].addEventListener('dblclick', (e) => {
+        console.log('doubleclick');
+        const oldTitle = e.target.innerHTML;
+        console.log(e.target.innerHTML);
+        e.target.innerHTML = `<input id="title-editor" type="text" value="${oldTitle}">`;
+        document.getElementById('title-editor').focus();
+        document.getElementById('title-editor').addEventListener('blur', (e) => {
+          const value = e.target.value;
+          controller.updateProjectTitle(e.target.parentElement.dataset.id, value);
+          e.target.parentElement.innerHTML = value;
+        });
+        document.getElementById('title-editor').addEventListener('keyup', (e) => {
+          if (e.keyCode == 13) {
+            e.target.blur();
+          }
+        });
       }, this);
     }
   }
@@ -22,8 +45,8 @@ class View {
     let htmlstring = '';
     const files = document.getElementById('files');
 
-    for (let title of data) {
-      htmlstring += `<div class="file" data-id="${data.indexOf(title)}">${title}</div>`;
+    for (let obj of data) {
+      htmlstring += `<div class="file" data-id="${obj._id}">${obj.title}</div>`;
     }
 
     files.innerHTML = htmlstring;
@@ -35,10 +58,20 @@ class View {
     });
   }
 
-  sendUpdate() {
-    const title = document.getElementById('file-title').value;
-    const content = document.getElementById('file-editor').value;
-    controller.sendProjectUpdate(this._currentProject, title, content);
+  initSaveProject() {
+    const button = document.getElementById('save-project');
+    button.addEventListener('click', () => {
+      const activeElem = document.querySelector('.active');
+      const textEditor = document.getElementById('file-editor');
+      controller.sendProjectUpdate(activeElem.dataset.id, textEditor.value);
+    });
+  }
+
+  initRemoveProject() {
+    const button = document.getElementById('remove-project');
+    button.addEventListener('click', (e) => {
+      controller.removeProject(e.target.dataset.id);
+    });
   }
 
   initPBReceiver() {
@@ -50,14 +83,16 @@ class View {
 
   initEditorListener() {
     const editor = document.getElementById('file-editor');
-    editor.addEventListener('input', (e) => {
-      console.log(e);
+    editor.addEventListener('input', () => {
       const text = editor.value;
-      /* PB2 code
-      this.sendToPB(text);
-      */
       this.sendMessage(editor.value, editor.selectionStart, editor.selectionEnd);
     });
+  }
+
+  updateFileEditor(value) {
+    const editor = document.getElementById('file-editor');
+    document.getElementById('remove-project').dataset.id = value[0]._id;
+    editor.value = value[0].content;
   }
 
   sendToPB(text) {
@@ -91,9 +126,7 @@ class View {
       const editor = document.getElementById('file-editor');
       let start = editor.selectionStart,
         end = editor.selectionEnd;
-      console.log(editor.value.substring(0, start));
-      console.log(data.msg.substring(0, start));
-      if(editor.value.substring(0, start) !== data.msg.substring(0, start)){
+      if (editor.value.substring(0, start) !== data.msg.substring(0, start)) {
         const difference = data.msg.length - editor.value.length;
         start += difference;
         end += difference;
@@ -104,6 +137,12 @@ class View {
     this.socket.on('disconnect', () => {
       console.log('socket.io disconnected!');
     });
+  }
+
+  changeRoom(param) {
+    console.log('changing room');
+    this.room = param;
+    this.socket.emit('room', param);
   }
 
 }

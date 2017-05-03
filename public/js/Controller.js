@@ -15,18 +15,28 @@ class Controller {
     view.updateFileEditor(data);
   }
 
-  sendProjectUpdate(id, title, content) {
-    model.updateProject(id, title, content);
+  sendProjectUpdate(id, content) {
+    model.updateProject(id, content);
   }
 
   addProject() {
     model.addProject();
   }
 
+  updateProjectTitle(id, title) {
+    model.updateProjectTitle(id, title);
+  }
+
+  removeProject(id) {
+    model.removeProject(id);
+  }
+
   run() {
     model.setCurrentUser('u');
     model.getProjectTitles();
     view.initAddProject();
+    view.initSaveProject();
+    view.initRemoveProject();
     // view.initPBReceiver();
     view.initEditorListener();
     view.initSockets();

@@ -29,7 +29,10 @@ if (process.env.ENV == 'dev') {
     cert: sslcert
   };
   const server = https.createServer(options, app);
-
+  const io = require('socket.io').listen(server);
+  io.sockets.on('connection', (socket) => {
+    socketFunc.initSockets(socket, io);
+  });
   server.listen(3000);
 } else {
   app.enable('trust proxy');
@@ -41,12 +44,13 @@ if (process.env.ENV == 'dev') {
       // request was via http, so redirect to https
       res.redirect('https://' + req.headers.host + req.url);
     }
-  });
-  const io = require('socket.io').listen(app);
+  });  
+  const server = https.createServer(app);
+  const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
     socketFunc.initSockets(socket, io);
   });
-  app.listen(3000);
+  server.listen(3000);
 }
 
 mongoose.Promise = global.Promise;

@@ -47,6 +47,10 @@ if (process.env.ENV == 'dev') {
       res.redirect('https://' + req.headers.host + req.url);
     }
   });
+  const io = require('socket.io').listen(app.listen(3000));
+  io.sockets.on('connection', (socket) => {
+    socketFunc.initSockets(socket, io);
+  });
   app.listen(3000);
 }
 

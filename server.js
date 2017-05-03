@@ -51,7 +51,6 @@ if (process.env.ENV == 'dev') {
   io.sockets.on('connection', (socket) => {
     socketFunc.initSockets(socket, io);
   });
-  app.listen(3000);
 }
 
 mongoose.Promise = global.Promise;

@@ -50,7 +50,8 @@ class View {
 
   initEditorListener() {
     const editor = document.getElementById('file-editor');
-    editor.addEventListener('input', () => {
+    editor.addEventListener('input', (e) => {
+      console.log(e);
       const text = editor.value;
       /* PB2 code
       this.sendToPB(text);
@@ -88,7 +89,17 @@ class View {
     this.socket.on('message', (data) => {
       console.log('Incoming message:', data);
       const editor = document.getElementById('file-editor');
+      let start = editor.selectionStart,
+        end = editor.selectionEnd;
+      console.log(editor.value.substring(0, start));
+      console.log(data.msg.substring(0, start));
+      if(editor.value.substring(0, start) !== data.msg.substring(0, start)){
+        const difference = data.msg.length - editor.value.length;
+        start += difference;
+        end += difference;
+      }
       editor.value = data.msg;
+      editor.setSelectionRange(start, end);
     });
     this.socket.on('disconnect', () => {
       console.log('socket.io disconnected!');

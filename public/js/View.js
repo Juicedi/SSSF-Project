@@ -3,7 +3,7 @@ class View {
   constructor() {
     this.currentProject = '';
     // this.pb2 = new PB2('https://pb2-serverless.jelastic.metropolia.fi', 'cloudmemo');
-    this.socket = io.connect('http://127.0.0.1:3001');
+    this.socket = io.connect(window.location.host);
     this.room = 'test';
   }
 

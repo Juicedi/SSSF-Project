@@ -14,12 +14,6 @@ const fs = require('fs');
 const middlewares = require('./modules/middlewares.js');
 const socketFunc = require('./modules/socketFunc.js');
 
-// Handle incoming connections from clients
-const io = require('socket.io')(3001);
-io.sockets.on('connection', (socket) => {
-  socketFunc.initSockets(socket, io);
-});
-
 const sessionConfig = {
   secret: 'asd',
   resave: true,
@@ -27,13 +21,16 @@ const sessionConfig = {
 };
 
 if (process.env.ENV == 'dev') {
+  // Handle incoming connections from clients
   const sslkey = fs.readFileSync('ssl-key.pem');
   const sslcert = fs.readFileSync('ssl-cert.pem');
   const options = {
     key: sslkey,
     cert: sslcert
   };
-  https.createServer(options, app).listen(3000);
+  const server = https.createServer(options, app);
+
+  server.listen(3000);
 } else {
   app.enable('trust proxy');
   app.use((req, res, next) => {
@@ -44,6 +41,10 @@ if (process.env.ENV == 'dev') {
       // request was via http, so redirect to https
       res.redirect('https://' + req.headers.host + req.url);
     }
+  });
+  const io = require('socket.io').listen(app);
+  io.sockets.on('connection', (socket) => {
+    socketFunc.initSockets(socket, io);
   });
   app.listen(3000);
 }
@@ -159,6 +160,6 @@ app.get('/login', (req, res) => {
 });
 
 http.createServer((req, res) => {
-  res.writeHead(301, { 'Location': 'https://localhost:3000' + req.url });
+  res.writeHead(301, { 'Location': 'https://localhost:' + req.url });
   res.end();
 }).listen(8080);

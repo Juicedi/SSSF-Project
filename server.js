@@ -21,6 +21,7 @@ const sessionConfig = {
 };
 
 if (process.env.ENV == 'dev') {
+  console.log('starting server and socket (Local)');
   // Handle incoming connections from clients
   const sslkey = fs.readFileSync('ssl-key.pem');
   const sslcert = fs.readFileSync('ssl-cert.pem');
@@ -35,6 +36,7 @@ if (process.env.ENV == 'dev') {
   });
   server.listen(3000);
 } else {
+  console.log('starting server and socket (Jelastic)');
   app.enable('trust proxy');
   app.use((req, res, next) => {
     if (req.secure) {

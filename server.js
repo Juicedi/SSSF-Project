@@ -49,20 +49,18 @@ if (process.env.ENV == 'dev') {
       res.redirect('https://' + req.headers.host + req.url);
     }
   });
-  //const server = app.listen(3000, () => { console.log('server up?'); });
-  // const io = require('socket.io').listen(server);
-  // io.sockets.on('connection', (socket) => {
-  //   console.log('socket on :)');
-  //   socketFunc.initSockets(socket, io);
-  // });
-  // io.sockets.on('connect_failed', (err) => {
-  //   console.log('Why does socket failed to connect?' + err);
-  // });
-  // io.sockets.on('error', (text) => {
-  //   console.log('Why does socket failed with error?' + text);
-  // });
-  //app.listen(3000, () => {console.log('server should work... ');});
-  app.listen(3000); 
+  const server = app.listen(3000, () => { console.log('server up?'); });
+  const io = require('socket.io').listen(server);
+  io.sockets.on('connection', (socket) => {
+    console.log('socket on :)');
+    socketFunc.initSockets(socket, io);
+  });
+  io.sockets.on('connect_failed', (err) => {
+    console.log('Why does socket failed to connect?' + err);
+  });
+  io.sockets.on('error', (text) => {
+    console.log('Why does socket failed with error?' + text);
+  });
 }
 
 mongoose.Promise = global.Promise;

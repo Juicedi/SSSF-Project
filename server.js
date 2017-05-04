@@ -56,7 +56,7 @@ if (process.env.ENV == 'dev') {
   io.sockets.on('connect_failed', (err) => {
     console.log('Why does socket failed to connect?' + err);
   });
-    io.sockets.on('error', (text) => {
+  io.sockets.on('error', (text) => {
     console.log('Why does socket failed with error?' + text);
   });
 }
@@ -210,7 +210,7 @@ app.post('/removeProject', (req, res) => {
   });
 });
 
-http.createServer((req, res) => {
+/*http.createServer((req, res) => {
   res.writeHead(301, { 'Location': 'https://localhost:' + req.url });
   res.end();
-}).listen(8080);
+}).listen(8080);*/

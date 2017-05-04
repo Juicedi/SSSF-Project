@@ -5,6 +5,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
+const http = require('http');
 const https = require('https');
 const express = require('express');
 const app = express();
@@ -20,7 +21,6 @@ const sessionConfig = {
 
 if (process.env.ENV == 'dev') {
   console.log('starting server and socket (Local)');
-  //const http = require('http');
   const fs = require('fs');
   // Handle incoming connections from clients
   const sslkey = fs.readFileSync('ssl-key.pem');
@@ -62,8 +62,7 @@ if (process.env.ENV == 'dev') {
   //   console.log('Why does socket failed with error?' + text);
   // });
   //app.listen(3000, () => {console.log('server should work... ');});
-  const server = https.createServer({}, app);
-  server.listen(3000, () => {console.log('would that work?');});
+  app.listen(3000);
 }
 
 mongoose.Promise = global.Promise;
@@ -215,7 +214,7 @@ app.post('/removeProject', (req, res) => {
   });
 });
 
-/*http.createServer((req, res) => {
+http.createServer((req, res) => {
   res.writeHead(301, { 'Location': 'https://localhost:' + req.url });
   res.end();
-}).listen(8080);*/
+}).listen(8080);

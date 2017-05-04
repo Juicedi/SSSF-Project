@@ -47,12 +47,12 @@ if (process.env.ENV == 'dev') {
       res.redirect('https://' + req.headers.host + req.url);
     }
   });
-  const server = http.createServer(app);
+  const server = app.listen(3000, () => { console.log('server up?'); });
   const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
+    console.log('socket on :)');
     socketFunc.initSockets(socket, io);
   });
-  server.listen(3000);
 }
 
 mongoose.Promise = global.Promise;

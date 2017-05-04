@@ -53,6 +53,12 @@ if (process.env.ENV == 'dev') {
     console.log('socket on :)');
     socketFunc.initSockets(socket, io);
   });
+  io.sockets.on('connect_failed', (err) => {
+    console.log('Why does socket failed to connect?' + err);
+  });
+    io.sockets.on('error', (text) => {
+    console.log('Why does socket failed with error?' + text);
+  });
 }
 
 mongoose.Promise = global.Promise;

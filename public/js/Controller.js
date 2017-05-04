@@ -7,6 +7,11 @@ class Controller {
     view.initFileBtn();
   }
 
+  handleSharedProjectTitles(data) {
+    view.showSharedProjects(data);
+    view.initFileBtn();
+  }
+
   getProjectData(id) {
     model.getProjectData(id);
   }
@@ -17,6 +22,19 @@ class Controller {
 
   sendProjectUpdate(id, content) {
     model.updateProject(id, content);
+  }
+
+  addShare(id, user) {
+    model.addShare(id, user);
+  }
+  removeShare(id, user) {
+    model.removeShare(id, user);
+  }
+  getShared(id) {
+    model.getShared(id);
+  }
+  updateShared(data) {
+    view.updateShared(data);
   }
 
   addProject() {
@@ -34,10 +52,11 @@ class Controller {
   run() {
     model.setCurrentUser('u');
     model.getProjectTitles();
+    model.getSharedProjectTitles();
     view.initAddProject();
     view.initSaveProject();
     view.initRemoveProject();
-    // view.initPBReceiver();
+    view.initShareProject();
     view.initEditorListener();
     view.initSockets();
   }

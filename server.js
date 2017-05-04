@@ -52,14 +52,7 @@ if (process.env.ENV == 'dev') {
   const server = app.listen(3000, () => { console.log('server up?'); });
   const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
-    console.log('socket on :)');
     socketFunc.initSockets(socket, io);
-  });
-  io.sockets.on('connect_failed', (err) => {
-    console.log('Why does socket failed to connect?' + err);
-  });
-  io.sockets.on('error', (text) => {
-    console.log('Why does socket failed with error?' + text);
   });
 }
 
@@ -102,12 +95,9 @@ passport.use(new LocalStrategy(
 // Add the user in session
 passport.serializeUser((user, done) => {
   console.log('serializeUser');
-  console.log(user.username);
   return done(null, user.username);
 });
 passport.deserializeUser((user, done) => {
-  console.log('deserializeUser');
-  console.log(user);
   return done(null, user);
 });
 app.use(session(sessionConfig));
@@ -116,9 +106,9 @@ app.use(passport.session());
 app.use(middlewares.redirectIfNotUser);
 app.use(express.static('public'));
 
-Project.find().exec().then((projects) => {
-  console.log(projects);
-});
+// Project.find().exec().then((projects) => {
+//   console.log(projects);
+// });
 
 app.get('/', (req, res) => {
   res.redirect('/login.html');
@@ -129,7 +119,6 @@ app.get('/app', (req, res) => {
 app.post('/project', (req, res) => {
   console.log('body: ' + JSON.stringify(req.body));
   Project.find().where('_id').equals(req.body.id).exec().then((project) => {
-    console.log(project);
     res.send(project);
   });
 });
@@ -144,7 +133,7 @@ app.post('/addProject', (req, res) => {
     content: 'Placeholder Text',
   };
   Project.create(obj).then((post) => {
-    console.log(post);
+    console.log('Added project ' + post);
   });
   res.sendStatus(200);
 });
@@ -157,9 +146,49 @@ app.post('/updateProject', (req, res) => {
     content: req.body.content,
   };
   Project.update(query, data).then((post) => {
-    console.log(post.result);
+    console.log('Updated project ' + post.result);
   });
   res.sendStatus(200);
+});
+app.post('/addShare', (req, res) => {
+  Project.findOne().where('_id').equals(req.body.id).exec().then((project) => {
+    let array = project.shared.slice();
+    array.push(req.body.user);
+    const query = { _id: req.body.id };
+    const data = {
+      _id: req.body.id,
+      shared: array,
+    };
+    if (project.shared.indexOf(req.body.user) === -1 && project.user !== req.body.user) {
+      Project.update(query, data).then(() => {
+        res.send('Project shared with new user');
+      });
+    } else {
+      res.send('This is already shared with given user');
+    }
+  });
+});
+app.post('/removeShare', (req, res) => {
+  Project.findOne().where('_id').equals(req.body.id).exec().then((project) => {
+    let array = project.shared.slice();
+    const itemIndex = project.shared.indexOf(req.body.user);
+    if (itemIndex > -1) {
+      array.splice(itemIndex, 1);
+    }
+    const query = { _id: req.body.id };
+    const data = {
+      _id: req.body.id,
+      shared: array,
+    };
+    Project.update(query, data).then(() => {
+      res.send('Removed user from shared list');
+    });
+  });
+});
+app.post('/getShared', (req, res) => {
+  Project.findOne().where('_id').equals(req.body.id).exec().then((project) => {
+    res.send(project.shared);
+  });
 });
 app.post('/updateProjectTitle', (req, res) => {
   const query = {
@@ -170,13 +199,21 @@ app.post('/updateProjectTitle', (req, res) => {
     title: req.body.title,
   };
   Project.update(query, data).then((post) => {
-    console.log(post.result);
+    console.log('title updated');
   });
   res.sendStatus(200);
 });
 app.post('/projects', (req, res) => {
   console.log('Searching titles for the user: ' + req.body.username);
   Project.find().where('user').equals(req.body.username).exec().then((results, err) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    res.send(results);
+  });
+});
+app.post('/getSharedProjects', (req, res) => {
+  Project.find({ shared: req.body.username }).exec().then((results, err) => {
     if (err) {
       res.status(500).send(err);
     }
@@ -200,7 +237,7 @@ app.post('/register', (req, res) => {
   ProUser.create(data).then((post) => {
     console.log(post.result);
   });
-  res.sendStatus(200);
+  res.redirect('/login');
 });
 app.get('/login', (req, res) => {
   res.redirect('login.html');

@@ -4,7 +4,7 @@ class Model {
     this.user = 'test';
   }
 
-  getProjectTitles() {    
+  getProjectTitles() {
     const myInit = {
       method: 'POST',
       headers: {
@@ -23,6 +23,31 @@ class Model {
       // Do something with the response
       response.json().then((data) => {
         controller.handleProjectTitles(data);
+      });
+    }).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+  getSharedProjectTitles() {
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'username=' + this.user,
+    };
+    const mRequest = new Request('/getSharedProjects');
+    fetch(mRequest, myInit).then((response) => {
+      if (!response.ok) {
+        console.log('Error! Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Do something with the response
+      response.json().then((data) => {
+        controller.handleSharedProjectTitles(data);
       });
     }).catch(function (err) {
       console.log('Fetch Error :-S', err);
@@ -49,6 +74,85 @@ class Model {
       // Do something with the response
       response.json().then((data) => {
         controller.handleProjectData(data);
+      });
+    }).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+  getShared(id) {
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + id,
+    };
+    const mRequest = new Request('/getShared');
+    fetch(mRequest, myInit).then((response) => {
+      if (!response.ok) {
+        console.log('Error! Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Do something with the response
+      response.json().then((data) => {
+        controller.updateShared(data);
+      });
+    }).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+  addShare(id, user) {
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + id + '&user=' + user
+    };
+
+    const mRequest = new Request('/addShare');
+    fetch(mRequest, myInit).then((response) => {
+      if (!response.ok) {
+        console.log('Error! Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Do something with the response
+      response.blob().then(() => {
+        console.log('Shared with a new user');
+        this.getShared(id);
+      });
+    }).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+  removeShare(id, user) {
+    const myInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + id + '&user=' + user
+    };
+
+    const mRequest = new Request('/removeShare');
+    fetch(mRequest, myInit).then((response) => {
+      if (!response.ok) {
+        console.log('Error! Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Do something with the response
+      response.blob().then(() => {
+        console.log('Removed user from the project');
+        this.getShared(id);
       });
     }).catch(function (err) {
       console.log('Fetch Error :-S', err);

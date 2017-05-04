@@ -15,10 +15,21 @@ body {
   margin: 0;
 }
 
-#add-project, #files, #editor {
+#add-project, #files, #editor, #buttons {
   display: inline-block;
   vertical-align: top;
   height: 99%;
+}
+
+#share {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    padding: 1em 2em;
+    background-color: #fff;
+    border-radius: 0.5em;
+    box-shadow: 0.1em 0.1em 0.6em rgba(0, 0, 0, 0.3);
 }
 
 #add-project textarea, #add-project input {
@@ -90,4 +101,16 @@ body {
   left: 49%;
   font-size: 3em;
   color: #c3c3c3;
+}
+
+.hide {
+  display: none !important;
+}
+
+.shared-user {
+  cursor: pointer;
+}
+
+.shared-user:hover {
+  color: #5aaaff;
 }

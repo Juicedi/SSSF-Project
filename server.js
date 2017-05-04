@@ -5,6 +5,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
+const https = require('https');
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -20,7 +21,6 @@ const sessionConfig = {
 if (process.env.ENV == 'dev') {
   console.log('starting server and socket (Local)');
   //const http = require('http');
-  const https = require('https');
   const fs = require('fs');
   // Handle incoming connections from clients
   const sslkey = fs.readFileSync('ssl-key.pem');
@@ -61,7 +61,9 @@ if (process.env.ENV == 'dev') {
   // io.sockets.on('error', (text) => {
   //   console.log('Why does socket failed with error?' + text);
   // });
-  app.listen(3000, (test) => {console.log('server should work... ' + test);});
+  //app.listen(3000, () => {console.log('server should work... ');});
+  const server = https.createServer({}, app);
+  server.listen(3000, () => {console.log('would that work?');});
 }
 
 mongoose.Promise = global.Promise;

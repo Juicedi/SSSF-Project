@@ -28,7 +28,7 @@ const saveFromMemory = (id, content) => {
     _id: id,
     content: content,
   };
-  Project.update(query, data).then((post) => {
+  Project.update(query, data).then(() => {
     console.log('Updated project');
   });
 };

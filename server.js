@@ -62,7 +62,7 @@ if (process.env.ENV == 'dev') {
   //   console.log('Why does socket failed with error?' + text);
   // });
   //app.listen(3000, () => {console.log('server should work... ');});
-  app.listen(3000);
+  app.listen(3000); 
 }
 
 mongoose.Promise = global.Promise;

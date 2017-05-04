@@ -18,6 +18,20 @@ const sessionConfig = {
   resave: true,
   saveUninitialized: true,
 };
+const openedFiles = {};
+const saveFromMemory = (id, content) => {
+  console.log('autosaving :: ' + content);
+  const query = {
+    _id: id,
+  };
+  const data = {
+    _id: id,
+    content: content,
+  };
+  Project.update(query, data).then((post) => {
+    console.log('Updated project');
+  });
+};
 
 if (process.env.ENV == 'dev') {
   console.log('starting server and socket (Local)');
@@ -32,6 +46,25 @@ if (process.env.ENV == 'dev') {
   const server = https.createServer(options, app);
   const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
+    console.log('Socket connected');
+    socket.on('room', (data) => {
+      socket.leave(data.oldRoom);
+      if (data.oldRoom != null) {
+        if (typeof io.sockets.adapter.rooms[data.oldRoom] == 'undefined' && typeof openedFiles[data.oldRoom] != 'undefined') {
+          saveFromMemory(data.oldRoom, openedFiles[data.oldRoom]);
+          delete openedFiles[data.oldRoom];
+        }
+      }
+      socket.join(data.newRoom);
+    });
+    socket.on('message', (jsonMsg) => {
+      // console.log('received message from client: ' + JSON.stringify(jsonMsg));
+      const response = {
+        msg: jsonMsg.text,
+      };
+      openedFiles[jsonMsg.room] = jsonMsg.text;
+      io.in(jsonMsg.room).emit('message', response);
+    });
     socketFunc.initSockets(socket, io);
   });
   server.listen(3000);
@@ -52,6 +85,25 @@ if (process.env.ENV == 'dev') {
   const server = app.listen(3000, () => { console.log('server up?'); });
   const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
+    console.log('Socket connected');
+    socket.on('room', (data) => {
+      socket.leave(data.oldRoom);
+      if (data.oldRoom != null) {
+        if (typeof io.sockets.adapter.rooms[data.oldRoom] == 'undefined' && typeof openedFiles[data.oldRoom] != 'undefined') {
+          saveFromMemory(data.oldRoom, openedFiles[data.oldRoom]);
+          delete openedFiles[data.oldRoom];
+        }
+      }
+      socket.join(data.newRoom);
+    });
+    socket.on('message', (jsonMsg) => {
+      // console.log('received message from client: ' + JSON.stringify(jsonMsg));
+      const response = {
+        msg: jsonMsg.text,
+      };
+      openedFiles[jsonMsg.room] = jsonMsg.text;
+      io.in(jsonMsg.room).emit('message', response);
+    });
     socketFunc.initSockets(socket, io);
   });
 }
@@ -65,7 +117,6 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${proc
 
 const Project = require('./modules/projectSchema.js');
 const ProUser = require('./modules/projectUserSchema.js');
-const openedFiles = {};
 
 app.use(bParser.urlencoded({ extended: true }));
 
@@ -117,10 +168,20 @@ app.get('/app', (req, res) => {
   res.redirect('/app.html?u=' + req.user);
 });
 app.post('/project', (req, res) => {
-  console.log('body: ' + JSON.stringify(req.body));
-  Project.find().where('_id').equals(req.body.id).exec().then((project) => {
-    res.send(project);
-  });
+  console.log(openedFiles);
+  if (typeof openedFiles[req.body.id] !== 'undefined') {
+    const data = [{
+      _id: req.body.id,
+      content: openedFiles[req.body.id],
+    }];
+    console.log(data);
+    res.send(data);
+  } else {
+    Project.find().where('_id').equals(req.body.id).exec().then((project) => {
+      res.send(project);
+    });
+  }
+
 });
 app.post('/addProject', (req, res) => {
   console.log(`Added project ${req.body.username}`);

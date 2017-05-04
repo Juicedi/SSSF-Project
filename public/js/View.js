@@ -55,8 +55,8 @@ class View {
       files[i].addEventListener('click', (e) => {
         const projectId = e.target.dataset.id;
         this._currentProject = projectId;
-        this.toggleFileSelect(e.target);
         this.changeRoom(e.target.dataset.id);
+        this.toggleFileSelect(e.target);
         this.toggleEditorAndButtons('reveal');
         if (e.target.classList.contains('shared-file')) {
           this.toggleEditorAndButtons('shared');
@@ -235,7 +235,13 @@ class View {
   changeRoom(param) {
     console.log('changing room');
     this.room = param;
-    this.socket.emit('room', param);
+    const data = {
+      newRoom: param,
+    };
+    if (document.querySelector('.file.active')) {
+      data.oldRoom = document.querySelector('.file.active').dataset.id;
+    }
+    this.socket.emit('room', data);
   }
 
 }

@@ -2,15 +2,12 @@
 const mongoose = require('mongoose');
 const bParser = require('body-parser');
 const session = require('express-session');
-const http = require('http');
-const https = require('https');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
 const express = require('express');
 const app = express();
 require('dotenv').config();
-const fs = require('fs');
 const middlewares = require('./modules/middlewares.js');
 const socketFunc = require('./modules/socketFunc.js');
 
@@ -22,6 +19,9 @@ const sessionConfig = {
 
 if (process.env.ENV == 'dev') {
   console.log('starting server and socket (Local)');
+  //const http = require('http');
+  const https = require('https');
+  const fs = require('fs');
   // Handle incoming connections from clients
   const sslkey = fs.readFileSync('ssl-key.pem');
   const sslcert = fs.readFileSync('ssl-cert.pem');
@@ -40,25 +40,27 @@ if (process.env.ENV == 'dev') {
   app.enable('trust proxy');
   app.use((req, res, next) => {
     if (req.secure) {
+      console.log('connected using https');
       // request was via https, so do no special handling
       next();
     } else {
+      console.log('connected using http... redirecting to https');
       // request was via http, so redirect to https
       res.redirect('https://' + req.headers.host + req.url);
     }
   });
   const server = app.listen(3000, () => { console.log('server up?'); });
-  const io = require('socket.io').listen(server);
-  io.sockets.on('connection', (socket) => {
-    console.log('socket on :)');
-    socketFunc.initSockets(socket, io);
-  });
-  io.sockets.on('connect_failed', (err) => {
-    console.log('Why does socket failed to connect?' + err);
-  });
-  io.sockets.on('error', (text) => {
-    console.log('Why does socket failed with error?' + text);
-  });
+  // const io = require('socket.io').listen(server);
+  // io.sockets.on('connection', (socket) => {
+  //   console.log('socket on :)');
+  //   socketFunc.initSockets(socket, io);
+  // });
+  // io.sockets.on('connect_failed', (err) => {
+  //   console.log('Why does socket failed to connect?' + err);
+  // });
+  // io.sockets.on('error', (text) => {
+  //   console.log('Why does socket failed with error?' + text);
+  // });
 }
 
 mongoose.Promise = global.Promise;

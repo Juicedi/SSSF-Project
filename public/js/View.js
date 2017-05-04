@@ -7,6 +7,10 @@ class View {
     this.room = 'test';
   }
 
+  /**
+   * Toggles the visiblity of the text editor and some buttons.
+   * @param {String} action
+   */
   toggleEditorAndButtons(action) {
     const editor = document.getElementById('editor');
     const buttons = document.getElementById('buttons');
@@ -39,6 +43,10 @@ class View {
     }
   }
 
+  /**
+   * Gives selected file "active"-class.
+   * @param {Element} elem
+   */
   toggleFileSelect(elem) {
     const files = document.querySelectorAll('.file');
     for (let i = 0; i < files.length; i++) {
@@ -49,6 +57,9 @@ class View {
     }
   }
 
+  /**
+   * Initializes the file buttons.
+   */
   initFileBtn() {
     const files = document.querySelectorAll('.file');
     for (let i = 0; i < files.length; i++) {
@@ -85,6 +96,10 @@ class View {
     }
   }
 
+  /**
+   * Adds files to the list.
+   * @param {Array} data
+   */
   showProjects(data) {
     const files = document.getElementById('files');
     let htmlstring = '';
@@ -94,6 +109,10 @@ class View {
     files.innerHTML = htmlstring;
   }
 
+  /**
+   * Adds shared files to the list.
+   * @param {Array} data
+   */
   showSharedProjects(data) {
     const files = document.getElementById('files');
     let htmlstring = '';
@@ -103,12 +122,19 @@ class View {
     files.innerHTML += htmlstring;
   }
 
+  /**
+   * Initializes the add project button
+   * that calls Controller to add new project file.
+   */
   initAddProject() {
     document.getElementById('add-project').addEventListener('click', () => {
       controller.addProject();
     });
   }
 
+  /**
+   * Initializes the save button.
+   */
   initSaveProject() {
     document.getElementById('save-project').addEventListener('click', () => {
       const activeElem = document.querySelector('.active');
@@ -137,6 +163,9 @@ class View {
     });
   }
 
+  /**
+   * Initializes the remove button.
+   */
   initRemoveProject() {
     document.getElementById('remove-project').addEventListener('click', (e) => {
       this.toggleEditorAndButtons('hide');
@@ -145,6 +174,11 @@ class View {
     });
   }
 
+  /**
+   * Initializes the editor.
+   * Editor will call send message function
+   * when user writes something.
+   */
   initEditorListener() {
     const editor = document.getElementById('file-editor');
     editor.addEventListener('input', () => {
@@ -195,6 +229,9 @@ class View {
     this.initSharedUsers();
   }
 
+  /**
+   * Sends message through socket.io.
+   */
   sendMessage(text, cursorStart, cursorEnd) {
     let msg = {};
     msg.app_id = 'app_id';
@@ -208,6 +245,9 @@ class View {
     this.socket.json.emit('message', msg);
   }
 
+  /**
+   * Initializes socket and its listeners.
+   */
   initSockets() {
     this.socket.on('connect', () => {
       // Connected, let's sign-up for to receive messages for this room
@@ -232,6 +272,10 @@ class View {
     });
   }
 
+  /**
+   * Changes socket's room.
+   * @param {String} param New rooms name.
+   */
   changeRoom(param) {
     console.log('changing room');
     this.room = param;

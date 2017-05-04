@@ -3,7 +3,9 @@ class Model {
   constructor() {
     this.user = 'test';
   }
-
+  /**
+   * Get user's project titles from DB.
+   */
   getProjectTitles() {
     const myInit = {
       method: 'POST',
@@ -29,6 +31,9 @@ class Model {
     });
   }
 
+  /**
+   * Get projects that have been shared with user.
+   */
   getSharedProjectTitles() {
     const myInit = {
       method: 'POST',
@@ -54,6 +59,9 @@ class Model {
     });
   }
 
+  /**
+   * Gets all data for the given project id.
+   */
   getProjectData(id) {
     const myInit = {
       method: 'POST',
@@ -80,6 +88,9 @@ class Model {
     });
   }
 
+  /**
+   * Get list of people this project is shared with.
+   */
   getShared(id) {
     const myInit = {
       method: 'POST',
@@ -105,6 +116,11 @@ class Model {
     });
   }
 
+  /**
+   * Add new person to projects shared list.
+   * @param {String} id Project ID
+   * @param {String} user Shared user's name
+   */
   addShare(id, user) {
     const myInit = {
       method: 'POST',
@@ -132,6 +148,11 @@ class Model {
     });
   }
 
+  /**
+   * Removes person from shared list.
+   * @param {String} id Project ID
+   * @param {String} user User's name which is to be removed
+   */
   removeShare(id, user) {
     const myInit = {
       method: 'POST',
@@ -159,6 +180,9 @@ class Model {
     });
   }
 
+  /**
+   * Adds a new project for the current user.
+   */
   addProject() {
     const myInit = {
       method: 'POST',
@@ -186,6 +210,11 @@ class Model {
     });
   }
 
+  /**
+   * Sends update to projects title.
+   * @param {String} id Project ID.
+   * @param {String} title Projects new title.
+   */
   updateProjectTitle(id, title) {
     const myInit = {
       method: 'POST',
@@ -212,6 +241,11 @@ class Model {
     });
   }
 
+  /**
+   * Updates projects content.
+   * @param {String} id Project ID.
+   * @param {String} content Projects new content.
+   */
   updateProject(id, content) {
     const myInit = {
       method: 'POST',
@@ -238,6 +272,10 @@ class Model {
     });
   }
 
+/**
+ * Remove project with the given ID from DB.
+ * @param {String} id Projects ID
+ */
   removeProject(id) {
     const myInit = {
       method: 'POST',
@@ -267,6 +305,7 @@ class Model {
 
   /**
    * Sets current user from url parameters.
+   * @param {String} name Gets username from url.
    */
   setCurrentUser(name) {
     if (typeof name !== 'undefined') {

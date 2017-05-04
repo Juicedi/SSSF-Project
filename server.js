@@ -20,7 +20,6 @@ const sessionConfig = {
 };
 const openedFiles = {};
 const saveFromMemory = (id, content) => {
-  console.log('autosaving :: ' + content);
   const query = {
     _id: id,
   };
@@ -31,6 +30,28 @@ const saveFromMemory = (id, content) => {
   Project.update(query, data).then(() => {
     console.log('Updated project');
   });
+};
+const initSockets = (socket, io) => {
+  console.log('Socket connected');
+  socket.on('room', (data) => {
+    socket.leave(data.oldRoom);
+    if (data.oldRoom != null) {
+      if (typeof io.sockets.adapter.rooms[data.oldRoom] == 'undefined' && typeof openedFiles[data.oldRoom] != 'undefined') {
+        saveFromMemory(data.oldRoom, openedFiles[data.oldRoom]);
+        delete openedFiles[data.oldRoom];
+      }
+    }
+    socket.join(data.newRoom);
+  });
+  socket.on('message', (jsonMsg) => {
+    // console.log('received message from client: ' + JSON.stringify(jsonMsg));
+    const response = {
+      msg: jsonMsg.text,
+    };
+    openedFiles[jsonMsg.room] = jsonMsg.text;
+    io.in(jsonMsg.room).emit('message', response);
+  });
+  socketFunc.initSockets(socket, io);
 };
 
 if (process.env.ENV == 'dev') {
@@ -46,26 +67,7 @@ if (process.env.ENV == 'dev') {
   const server = https.createServer(options, app);
   const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
-    console.log('Socket connected');
-    socket.on('room', (data) => {
-      socket.leave(data.oldRoom);
-      if (data.oldRoom != null) {
-        if (typeof io.sockets.adapter.rooms[data.oldRoom] == 'undefined' && typeof openedFiles[data.oldRoom] != 'undefined') {
-          saveFromMemory(data.oldRoom, openedFiles[data.oldRoom]);
-          delete openedFiles[data.oldRoom];
-        }
-      }
-      socket.join(data.newRoom);
-    });
-    socket.on('message', (jsonMsg) => {
-      // console.log('received message from client: ' + JSON.stringify(jsonMsg));
-      const response = {
-        msg: jsonMsg.text,
-      };
-      openedFiles[jsonMsg.room] = jsonMsg.text;
-      io.in(jsonMsg.room).emit('message', response);
-    });
-    socketFunc.initSockets(socket, io);
+    initSockets(socket, io);
   });
   server.listen(3000);
 } else {
@@ -82,29 +84,10 @@ if (process.env.ENV == 'dev') {
       res.redirect('https://' + req.headers.host + req.url);
     }
   });
-  const server = app.listen(3000, () => { console.log('server up?'); });
+  const server = app.listen(3000, () => { console.log('server up'); });
   const io = require('socket.io').listen(server);
   io.sockets.on('connection', (socket) => {
-    console.log('Socket connected');
-    socket.on('room', (data) => {
-      socket.leave(data.oldRoom);
-      if (data.oldRoom != null) {
-        if (typeof io.sockets.adapter.rooms[data.oldRoom] == 'undefined' && typeof openedFiles[data.oldRoom] != 'undefined') {
-          saveFromMemory(data.oldRoom, openedFiles[data.oldRoom]);
-          delete openedFiles[data.oldRoom];
-        }
-      }
-      socket.join(data.newRoom);
-    });
-    socket.on('message', (jsonMsg) => {
-      // console.log('received message from client: ' + JSON.stringify(jsonMsg));
-      const response = {
-        msg: jsonMsg.text,
-      };
-      openedFiles[jsonMsg.room] = jsonMsg.text;
-      io.in(jsonMsg.room).emit('message', response);
-    });
-    socketFunc.initSockets(socket, io);
+    initSockets(socket, io);
   });
 }
 
@@ -157,32 +140,28 @@ app.use(passport.session());
 app.use(middlewares.redirectIfNotUser);
 app.use(express.static('public'));
 
-// Project.find().exec().then((projects) => {
-//   console.log(projects);
-// });
-
 app.get('/', (req, res) => {
   res.redirect('/login.html');
 });
+
 app.get('/app', (req, res) => {
   res.redirect('/app.html?u=' + req.user);
 });
+
 app.post('/project', (req, res) => {
-  console.log(openedFiles);
   if (typeof openedFiles[req.body.id] !== 'undefined') {
     const data = [{
       _id: req.body.id,
       content: openedFiles[req.body.id],
     }];
-    console.log(data);
     res.send(data);
   } else {
     Project.find().where('_id').equals(req.body.id).exec().then((project) => {
       res.send(project);
     });
   }
-
 });
+
 app.post('/addProject', (req, res) => {
   console.log(`Added project ${req.body.username}`);
   const obj = {
@@ -198,6 +177,7 @@ app.post('/addProject', (req, res) => {
   });
   res.sendStatus(200);
 });
+
 app.post('/updateProject', (req, res) => {
   const query = {
     _id: req.body.id,
@@ -211,6 +191,7 @@ app.post('/updateProject', (req, res) => {
   });
   res.sendStatus(200);
 });
+
 app.post('/addShare', (req, res) => {
   Project.findOne().where('_id').equals(req.body.id).exec().then((project) => {
     let array = project.shared.slice();
@@ -229,6 +210,7 @@ app.post('/addShare', (req, res) => {
     }
   });
 });
+
 app.post('/removeShare', (req, res) => {
   Project.findOne().where('_id').equals(req.body.id).exec().then((project) => {
     let array = project.shared.slice();
@@ -246,11 +228,13 @@ app.post('/removeShare', (req, res) => {
     });
   });
 });
+
 app.post('/getShared', (req, res) => {
   Project.findOne().where('_id').equals(req.body.id).exec().then((project) => {
     res.send(project.shared);
   });
 });
+
 app.post('/updateProjectTitle', (req, res) => {
   const query = {
     _id: req.body.id,
@@ -264,6 +248,7 @@ app.post('/updateProjectTitle', (req, res) => {
   });
   res.sendStatus(200);
 });
+
 app.post('/projects', (req, res) => {
   console.log('Searching titles for the user: ' + req.body.username);
   Project.find().where('user').equals(req.body.username).exec().then((results, err) => {
@@ -273,6 +258,7 @@ app.post('/projects', (req, res) => {
     res.send(results);
   });
 });
+
 app.post('/getSharedProjects', (req, res) => {
   Project.find({ shared: req.body.username }).exec().then((results, err) => {
     if (err) {
@@ -281,6 +267,7 @@ app.post('/getSharedProjects', (req, res) => {
     res.send(results);
   });
 });
+
 app.post('/authorize',
   passport.authenticate('local', {
     successRedirect: '/app',
@@ -288,6 +275,7 @@ app.post('/authorize',
     failureFlash: true,
   })
 );
+
 app.post('/register', (req, res) => {
   console.log(req.body);
   const hashPass = passwordHash.generate(req.body.password);
@@ -300,9 +288,11 @@ app.post('/register', (req, res) => {
   });
   res.redirect('/login');
 });
+
 app.get('/login', (req, res) => {
   res.redirect('login.html');
 });
+
 app.post('/removeProject', (req, res) => {
   Project.remove({ _id: req.body.id }).then((post) => {
     console.log(post);
